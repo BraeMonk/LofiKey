@@ -106,7 +106,7 @@ gap: 8px;
 flex-shrink: 0;
 }
 
-/* theme swatches in header — hidden on small screens */
+/* theme swatches in header - hidden on small screens */
 .theme-inline {
 display: flex;
 align-items: center;
@@ -768,7 +768,8 @@ textarea#output { height: 80px; }
   <div class="header-inner">
     <div class="logo">Key<span>Flow</span></div>
 
-<!-- Theme swatches — desktop only -->
+```
+<!-- Theme swatches - desktop only -->
 <div class="theme-inline">
   <span class="th-label">Theme</span>
   <div class="theme-swatch" style="background:#10121a" data-t="midnight" title="Midnight"></div>
@@ -778,7 +779,7 @@ textarea#output { height: 80px; }
   <div class="theme-swatch" style="background:#c0c0cc" data-t="noir"     title="Noir"></div>
 </div>
 
-<!-- Sound controls — desktop only -->
+<!-- Sound controls - desktop only -->
 <div class="header-sound">
   <label title="Volume">🎵</label>
   <input type="range" id="volSlider" min="0" max="1" step="0.05" value="0.4">
@@ -797,6 +798,7 @@ textarea#output { height: 80px; }
   <button id="clearBtn" class="danger">✕</button>
   <button class="menu-toggle" id="menuToggle" aria-label="Menu">☰</button>
 </div>
+```
 
   </div>
 </header>
@@ -819,16 +821,17 @@ textarea#output { height: 80px; }
 
   <div class="top-row">
 
+```
 <div class="output-card">
   <div class="output-bar">
     <span class="output-bar-left">Output</span>
     <div class="output-bar-right">
       <span id="charCount">0 chars</span>
-      <span id="wpmLive">— WPM</span>
+      <span id="wpmLive">- WPM</span>
       <button id="copyBtn" style="padding:4px 10px;font-size:.72rem">Copy</button>
     </div>
   </div>
-  <textarea id="output" placeholder="Start typing — session timer begins on first keystroke…" spellcheck="false"></textarea>
+  <textarea id="output" placeholder="Start typing - session timer begins on first keystroke..." spellcheck="false"></textarea>
 </div>
 
 <div class="stats-card">
@@ -845,11 +848,12 @@ textarea#output { height: 80px; }
 
   <div class="stat-divider"></div>
 
-  <div class="stat-row"><span class="stat-label">WPM</span><span class="stat-val accent" id="statWpm">—</span></div>
+  <div class="stat-row"><span class="stat-label">WPM</span><span class="stat-val accent" id="statWpm">-</span></div>
   <div class="stat-row"><span class="stat-label">Chars</span><span class="stat-val" id="statChars">0</span></div>
   <div class="stat-row"><span class="stat-label">Words</span><span class="stat-val" id="statWords">0</span></div>
   <div class="stat-row"><span class="stat-label">Keys</span><span class="stat-val green" id="statKeys">0</span></div>
 </div>
+```
 
   </div><!-- /top-row -->
 
@@ -924,10 +928,10 @@ textarea#output { height: 80px; }
 <div class="overlay" id="scoreOverlay">
   <div class="score-modal">
     <h2>Session Report</h2>
-    <div class="score-grade" id="scoreGrade">—</div>
+    <div class="score-grade" id="scoreGrade">-</div>
     <div class="score-msg" id="scoreMsg"></div>
     <div class="score-grid">
-      <div class="score-cell"><span class="label">WPM</span><span class="value hi" id="sc-wpm">—</span></div>
+      <div class="score-cell"><span class="label">WPM</span><span class="value hi" id="sc-wpm">-</span></div>
       <div class="score-cell"><span class="label">Characters</span><span class="value" id="sc-chars">0</span></div>
       <div class="score-cell"><span class="label">Words</span><span class="value" id="sc-words">0</span></div>
       <div class="score-cell"><span class="label">Keystrokes</span><span class="value green" id="sc-keys">0</span></div>
@@ -962,7 +966,7 @@ textarea#output { height: 80px; }
 <script>
 'use strict';
 
-/* ── THEMES ─────────────────────────────────────── */
+/* - THEMES - */
 const THEMES = [
   {id:'midnight', label:'Midnight', bg:'#10121a', key:'#252a3d', accent:'#5e9ff2'},
   {id:'slate',    label:'Slate',    bg:'#f0f2f5', key:'#ffffff', accent:'#3b6fd4'},
@@ -1008,7 +1012,7 @@ function buildThemeCards() {
   });
 }
 
-/* ── AUDIO ───────────────────────────────────────── */
+/* - AUDIO - */
 let _ctx;
 const getCtx = () => {
   if (!_ctx) _ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -1052,7 +1056,7 @@ document.getElementById('volSliderMobile').addEventListener('input', e => docume
 document.getElementById('soundPreset').addEventListener('change', e => document.getElementById('soundPresetMobile').value = e.target.value);
 document.getElementById('soundPresetMobile').addEventListener('change', e => document.getElementById('soundPreset').value = e.target.value);
 
-/* ── LAYOUT DATA ─────────────────────────────────── */
+/* - LAYOUT DATA - */
 const KBD = {
   qwerty: {name:'QWERTY', rows:[
     [{v:'`',s:'~'},{v:'1',s:'!'},{v:'2',s:'@'},{v:'3',s:'#'},{v:'4',s:'$'},{v:'5',s:'%'},{v:'6',s:'^'},{v:'7',s:'&'},{v:'8',s:'*'},{v:'9',s:'('},{v:'0',s:')'},{v:'-',s:'_'},{v:'=',s:'+'},{v:'⌫',k:'backspace',w:2,cls:'mod single'}],
@@ -1078,7 +1082,7 @@ const KBD = {
 };
 
 const STENO = {
-  numBar: {v:'#  —  Number Bar  —  #', k:'#', cls:'sk-num single', w:1},
+  numBar: {v:'#  -  Number Bar  -  #', k:'#', cls:'sk-num single', w:1},
   topRow: [
     {v:'S',k:'S-',cls:'sk-l'},{v:'T',k:'T-',cls:'sk-l'},{v:'K',k:'K-',cls:'sk-l'},
     {v:'P',k:'P-',cls:'sk-l'},{v:'W',k:'W-',cls:'sk-l'},{v:'H',k:'H-',cls:'sk-l'},
@@ -1103,14 +1107,14 @@ const STENO = {
   ]
 };
 
-/* ── STATE ──────────────────────────────────────── */
+/* - STATE - */
 let curLayout = 'qwerty', shiftOn = false, capsOn = false;
 let btDevice = null, btChar = null;
 const stenoSet = new Set();
 let timerDuration = 60, timerRunning = false, timerInterval = null,
     timerRemain = 60, sessionStart = null, keystrokeCount = 0;
 
-/* ── KEY BUILDER ────────────────────────────────── */
+/* - KEY BUILDER - */
 function makeKey(def) {
   if (def.gap) {
     const sp = document.createElement('div');
@@ -1142,7 +1146,7 @@ function makeRow(defs, ec) {
   return r;
 }
 
-/* ── RENDERERS ──────────────────────────────────── */
+/* - RENDERERS - */
 function buildStandardKbd(id) {
   const kb = document.getElementById('keyboard');
   kb.innerHTML = ''; kb.className = 'keyboard';
@@ -1181,7 +1185,7 @@ function buildNumpad() {
   w.appendChild(inn); kb.appendChild(w);
 }
 
-/* ── PRESS HANDLER ──────────────────────────────── */
+/* - PRESS HANDLER - */
 function handlePress(btn) {
   if (!btn || btn.disabled || btn.classList.contains('sk-gap')) return;
   playTone();
@@ -1230,7 +1234,7 @@ function handlePress(btn) {
   countKeystroke(); updateCounts();
 }
 
-/* ── TIMER ──────────────────────────────────────── */
+/* - TIMER - */
 function startTimer(auto) {
   if (timerRunning) return;
   if (timerRemain <= 0) timerRemain = timerDuration;
@@ -1298,7 +1302,7 @@ function showScoreModal() {
   else if (s.wpm >= 45) { grade = 'B'; msg = 'Great speed. Above average with room to grow.'; }
   else if (s.wpm >= 30) { grade = 'C'; msg = 'Solid typing. Keep practicing for better flow.'; }
   else if (s.wpm >= 15) { grade = 'D'; msg = 'Getting there! Focus on accuracy and rhythm.'; }
-  else                  { grade = 'F'; msg = 'Just starting out — every keystroke counts!'; }
+  else                  { grade = 'F'; msg = 'Just starting out - every keystroke counts!'; }
 
   const gradeEl = document.getElementById('scoreGrade');
   gradeEl.textContent = grade;
@@ -1318,7 +1322,7 @@ function showScoreModal() {
   document.getElementById('lblTimer').textContent = 'Timer: Done';
 }
 
-/* ── HELPERS ────────────────────────────────────── */
+/* - HELPERS - */
 function setShift(on) {
   shiftOn = on;
   document.getElementById('dotShift').classList.toggle('on', on);
@@ -1343,7 +1347,7 @@ function setLayout(id) {
   else buildStandardKbd(id);
 }
 
-/* ── BLUETOOTH ──────────────────────────────────── */
+/* - BLUETOOTH - */
 async function connectBT() {
   if (!navigator.bluetooth) { alert('Web Bluetooth requires Chrome or Edge.'); return; }
   try {
@@ -1373,7 +1377,7 @@ function setBTStatus(on, name = '') {
   document.getElementById('lblBT').textContent = on ? `BT: ${name || 'Connected'}` : 'Bluetooth: Off';
 }
 
-/* ── DRAWER ─────────────────────────────────────── */
+/* - DRAWER - */
 function openDrawer()  {
   buildThemeCards();
   document.getElementById('mobileDrawer').classList.add('open');
@@ -1401,7 +1405,7 @@ document.getElementById('drawerClearBtn').addEventListener('click', () => {
   stenoSet.clear(); renderStenoChord(); closeDrawer();
 });
 
-/* ── CORE EVENT WIRING ──────────────────────────── */
+/* - CORE EVENT WIRING - */
 const kb = document.getElementById('keyboard');
 kb.addEventListener('click', e => { const b = e.target.closest('.k'); if (b) handlePress(b); });
 kb.addEventListener('touchstart', e => {
@@ -1460,7 +1464,7 @@ document.addEventListener('keydown', e => {
 });
 document.getElementById('output').addEventListener('input', updateCounts);
 
-/* ── INIT ───────────────────────────────────────── */
+/* - INIT - */
 applyTheme('midnight');
 updateTimerDisplay();
 setLayout('qwerty');
