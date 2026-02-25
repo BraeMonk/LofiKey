@@ -11,518 +11,799 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 /* ============================= */
-/* ROOT VARIABLES */
+/* ROOT VARIABLES                */
 /* ============================= */
 :root {
-  --bg: #0f1115;
-  --panel: #1a1d24;
-  --panel-2: #222631;
-  --accent: #4cc9f0;
+  --bg:       #0f1115;
+  --panel:    #1a1d24;
+  --panel-2:  #222631;
+  --accent:   #4cc9f0;
   --accent-2: #80ffdb;
-  --text: #e6e9ef;
-  --text2: #b0b7c1;
-  --text3: #8a92a0;
-  --muted: #9aa3b2;
-  --danger: #ff4d6d;
-  --border: #2c3240;
-
-  --radius: 12px;
-  --spacing: 16px;
-  --transition: 0.2s ease;
-  --shadow: 0 4px 12px rgba(0,0,0,0.25);
-  --pulse: 1.5s ease-in-out infinite;
+  --accent-3: #f8b500;
+  --text:     #e6e9ef;
+  --text2:    #b0b7c1;
+  --text3:    #8a92a0;
+  --muted:    #9aa3b2;
+  --danger:   #ff4d6d;
+  --border:   #2c3240;
+  --radius:   12px;
+  --sp:       16px;
+  --tr:       0.18s ease;
+  --shadow:   0 4px 16px rgba(0,0,0,0.35);
 }
 
 /* ============================= */
-/* GLOBAL RESET */
+/* RESET                         */
 /* ============================= */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-  margin: 0;
-  padding: 0;
+*, *::before, *::after {
+box-sizing: border-box;
+-webkit-tap-highlight-color: transparent;
+margin: 0; padding: 0;
 }
-
 html, body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Syne', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-  line-height: 1.5;
+background: var(–bg);
+color: var(–text);
+font-family: ‘Syne’, sans-serif;
+-webkit-font-smoothing: antialiased;
+text-rendering: optimizeLegibility;
+line-height: 1.5;
+overscroll-behavior: none;
+min-height: 100vh;
 }
-
-body {
-  overscroll-behavior: none;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
+body { display: flex; flex-direction: column; }
 
 /* ============================= */
-/* LAYOUT WRAPPER */
+/* HEADER                        */
 /* ============================= */
-main {
-  flex: 1;
-  width: 100%;
-  padding: var(--spacing);
-  padding-bottom: calc(var(--spacing) + env(safe-area-inset-bottom));
-  max-width: 1100px;
-  margin: 0 auto;
+.app-header {
+position: sticky;
+top: 0; z-index: 100;
+background: var(–panel);
+border-bottom: 1px solid var(–border);
+padding-top: env(safe-area-inset-top);
+box-shadow: var(–shadow);
 }
-
-/* ============================= */
-/* HEADER */
-/* ============================= */
-header.app-header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: var(--panel);
-  border-bottom: 1px solid var(--border);
-  padding-top: env(safe-area-inset-top);
-  height: calc(60px + env(safe-area-inset-top));
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-left: var(--spacing);
-  padding-right: var(--spacing);
-  box-shadow: var(--shadow);
+.header-inner {
+display: flex;
+align-items: center;
+gap: 12px;
+padding: 0 var(–sp);
+height: 60px;
 }
-
 .logo {
-  font-family: 'IBM Plex Mono', monospace;
-  font-weight: 600;
-  font-size: 1.2rem;
-  color: var(--accent);
+font-family: ‘IBM Plex Mono’, monospace;
+font-weight: 600;
+font-size: 1.15rem;
+color: var(–accent);
+white-space: nowrap;
+flex-shrink: 0;
+}
+.logo span { color: var(–accent-2); }
+
+/* sound row in header */
+.header-sound {
+display: flex;
+align-items: center;
+gap: 8px;
+flex: 1;
+min-width: 0;
+}
+.header-sound label { font-size: 1rem; flex-shrink: 0; }
+.header-sound input[type=“range”] {
+flex: 1; min-width: 60px; max-width: 120px;
+}
+.header-sound select {
+width: auto;
+padding: 5px 8px;
+font-size: 0.78rem;
+flex-shrink: 0;
 }
 
-.logo span {
-  color: var(--accent-2);
+.header-actions {
+display: flex;
+align-items: center;
+gap: 8px;
+flex-shrink: 0;
 }
 
-.header-center {
-  flex: 1;
-  display: flex;
-  gap: var(--spacing);
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
+/* theme swatches in header — hidden on small screens */
+.theme-inline {
+display: flex;
+align-items: center;
+gap: 6px;
+flex-shrink: 0;
 }
+.theme-inline .th-label {
+font-size: 0.6rem;
+color: var(–text3);
+letter-spacing: .08em;
+text-transform: uppercase;
+}
+.theme-swatch {
+width: 20px; height: 20px;
+border-radius: 50%;
+border: 2px solid #444;
+cursor: pointer;
+transition: var(–tr);
+flex-shrink: 0;
+}
+.theme-swatch.active { border-color: var(–accent); box-shadow: 0 0 0 2px var(–accent); }
+.theme-swatch:hover { transform: scale(1.15); }
 
-.header-right {
-  display: flex;
-  gap: var(--spacing);
-  align-items: center;
+/* hide theme swatches & sound on tiny screens */
+@media (max-width: 600px) {
+.theme-inline { display: none; }
+.header-sound { display: none; }
 }
 
 /* ============================= */
-/* CHIPS & BUTTONS */
+/* BUTTONS & CHIPS               */
 /* ============================= */
 button, .chip {
-  background: var(--accent);
-  border: none;
-  border-radius: 8px;
-  padding: 6px 12px;
-  font-family: inherit;
-  font-weight: 600;
-  color: #000;
-  cursor: pointer;
-  transition: var(--transition);
-  touch-action: manipulation;
-  box-shadow: var(--shadow);
+display: inline-flex;
+align-items: center;
+justify-content: center;
+gap: 5px;
+background: var(–accent);
+border: none;
+border-radius: 8px;
+padding: 6px 12px;
+font-family: inherit;
+font-size: 0.8rem;
+font-weight: 600;
+color: #000;
+cursor: pointer;
+transition: var(–tr);
+touch-action: manipulation;
+white-space: nowrap;
 }
-
-button:hover, .chip:hover {
-  filter: brightness(1.05);
-  transform: translateY(-1px);
-}
-
-button:active, .chip:active {
-  transform: scale(0.97);
-}
-
+button:hover  { filter: brightness(1.1); transform: translateY(-1px); }
+button:active { transform: scale(0.96); filter: brightness(0.95); }
 button.secondary {
-  background: var(--panel-2);
-  color: var(--text);
-  border: 1px solid var(--border);
+background: var(–panel-2);
+color: var(–text);
+border: 1px solid var(–border);
 }
-
-button.danger, .chip.danger {
-  background: var(--danger);
-  color: #fff;
+button.danger { background: var(–danger); color: #fff; }
+button.menu-toggle {
+background: var(–panel-2);
+color: var(–text);
+border: 1px solid var(–border);
+font-size: 1.1rem;
+padding: 5px 10px;
 }
-
-/* ============================= */
-/* INPUTS */
-/* ============================= */
-input,
-textarea,
-select {
-  width: 100%;
-  padding: 10px;
-  font-size: 16px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--panel-2);
-  color: var(--text);
-  font-family: inherit;
-  appearance: none;
-  -webkit-appearance: none;
-  transition: var(--transition);
-}
-
-input:focus,
-textarea:focus,
-select:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 8px var(--accent);
-}
-
-textarea {
-  resize: vertical;
-  min-height: 80px;
+@media (min-width: 768px) {
+button, .chip { padding: 7px 14px; font-size: 0.82rem; }
 }
 
 /* ============================= */
-/* RANGE SLIDER */
-input[type="range"] {
-  -webkit-appearance: none;
-  background: transparent;
-  width: 100%;
+/* INPUTS                        */
+/* ============================= */
+input, textarea, select {
+width: 100%;
+padding: 9px 11px;
+font-size: 14px;
+border-radius: 8px;
+border: 1px solid var(–border);
+background: var(–panel-2);
+color: var(–text);
+font-family: inherit;
+-webkit-appearance: none;
+appearance: none;
+transition: var(–tr);
 }
+input:focus, textarea:focus, select:focus {
+outline: none;
+border-color: var(–accent);
+box-shadow: 0 0 0 3px rgba(76,201,240,.18);
+}
+textarea { resize: vertical; min-height: 80px; }
+select option { background: var(–panel-2); }
 
-input[type="range"]::-webkit-slider-runnable-track {
-  height: 6px;
-  background: var(--border);
-  border-radius: 3px;
+/* range */
+input[type=“range”] {
+-webkit-appearance: none;
+background: transparent;
+padding: 0;
+border: none;
+box-shadow: none;
 }
-
-input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  height: 18px;
-  width: 18px;
-  border-radius: 50%;
-  background: var(--accent);
-  margin-top: -6px;
-  cursor: pointer;
-  transition: var(--transition);
+input[type=“range”]::-webkit-slider-runnable-track {
+height: 5px;
+background: var(–border);
+border-radius: 3px;
 }
+input[type=“range”]::-webkit-slider-thumb {
+-webkit-appearance: none;
+height: 16px; width: 16px;
+border-radius: 50%;
+background: var(–accent);
+margin-top: -5.5px;
+cursor: pointer;
+}
+input[type=“range”]::-moz-range-track { height: 5px; background: var(–border); border-radius: 3px; }
+input[type=“range”]::-moz-range-thumb { height: 16px; width: 16px; border-radius: 50%; background: var(–accent); border: none; cursor: pointer; }
 
 /* ============================= */
-/* PANELS */
-.panel, .panel-2 {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: var(--spacing);
-  margin-bottom: var(--spacing);
-  box-shadow: var(--shadow);
-}
-
-.panel-2 {
-  background: var(--panel-2);
-}
-
+/* LAYOUT TABS                   */
 /* ============================= */
-/* FLEX & GRID UTILITIES */
-.flex { display:flex; gap:var(--spacing); flex-wrap:wrap; }
-.grid { display:grid; gap:var(--spacing); }
-.grid.auto { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
-
-/* ============================= */
-/* DRAWER / MODAL */
-.drawer, .mobile-drawer, .drawer-panel {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: var(--panel);
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
-  padding: var(--spacing);
-  padding-bottom: calc(var(--spacing) + env(safe-area-inset-bottom));
-  transform: translateY(100%);
-  transition: transform 0.25s ease;
-  max-width: 800px;
-  margin: 0 auto;
-  z-index: 150;
-  box-shadow: var(--shadow);
-}
-
-.drawer.open, .mobile-drawer.open {
-  transform: translateY(0);
-}
-
-.drawer-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.45);
-  z-index: 140;
-  backdrop-filter: blur(2px);
-}
-
-/* ============================= */
-/* OVERLAY MODALS */
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 200;
-  animation: fadeIn 0.25s ease forwards;
-}
-
-.overlay.active { display:flex; }
-
-.score-modal, .bt-modal {
-  background: var(--panel);
-  border-radius: 12px;
-  padding: var(--spacing);
-  max-width: 450px;
-  width: 90%;
-  color: var(--text);
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-  box-shadow: var(--shadow);
-  animation: popIn 0.25s ease forwards;
-}
-
-@keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
-@keyframes popIn { from {opacity:0; transform: scale(0.95);} to {opacity:1; transform: scale(1);} }
-
-.score-modal h2, .bt-modal h2 { margin:0; font-size:1.25rem; font-weight:700; }
-.score-actions, .modal-btns { display:flex; gap:var(--spacing); justify-content:flex-end; flex-wrap:wrap; }
-
-/* ============================= */
-/* KEYBOARD */
-.keyboard {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  width: 100%;
-}
-
-.kr { display: flex; gap:4px; }
-.k {
-  flex: 1 1 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 12px 6px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--panel-2);
-  color: var(--text);
-  font-family: 'IBM Plex Mono', monospace;
-  cursor: pointer;
-  position: relative;
-  user-select: none;
-  transition: var(--transition);
-}
-.k span.ks { position:absolute; top:2px; right:4px; font-size:0.55rem; color:var(--text3);}
-.k span.km { font-size:1rem; }
-
-.k.active { background: var(--accent); color: #000; }
-.k.glow { box-shadow: 0 0 8px var(--accent); }
-
-.space-key { flex:6; }
-
-/* ============================= */
-/* LAYOUT TABS */
 .layout-tabs {
-  display:flex;
-  gap:0.5rem;
-  justify-content:center;
-  margin: var(--spacing) 0;
+display: flex;
+gap: 6px;
+justify-content: center;
+flex-wrap: wrap;
+padding: 14px var(–sp) 6px;
+background: var(–bg);
 }
 .ltab {
-  padding:6px 12px;
-  border-radius:8px;
-  background: var(--panel-2);
-  color: var(--text2);
-  cursor:pointer;
-  font-weight:600;
-  border:1px solid var(--border);
-  transition: var(--transition);
+padding: 6px 14px;
+border-radius: 8px;
+background: var(–panel-2);
+color: var(–text2);
+cursor: pointer;
+font-size: 0.78rem;
+font-weight: 700;
+border: 1px solid var(–border);
+transition: var(–tr);
+letter-spacing: .04em;
 }
-.ltab.active { background: var(--accent); color:#000; border-color: var(--accent); }
+.ltab:hover { background: var(–panel); color: var(–text); }
+.ltab.active { background: var(–accent); color: #000; border-color: var(–accent); }
 
 /* ============================= */
-/* STATUS BAR */
+/* MAIN                          */
+/* ============================= */
+main {
+flex: 1;
+width: 100%;
+max-width: 1100px;
+margin: 0 auto;
+padding: var(–sp);
+padding-bottom: calc(var(–sp) + env(safe-area-inset-bottom));
+display: flex;
+flex-direction: column;
+gap: var(–sp);
+}
+@media (min-width: 1024px) {
+main { padding: 20px 28px 32px; }
+}
+
+/* ============================= */
+/* TOP ROW: OUTPUT + STATS       */
+/* ============================= */
+.top-row {
+display: grid;
+grid-template-columns: 1fr;
+gap: var(–sp);
+}
+@media (min-width: 700px) {
+.top-row { grid-template-columns: 1fr 220px; }
+}
+@media (min-width: 1000px) {
+.top-row { grid-template-columns: 1fr 240px; }
+}
+
+/* ============================= */
+/* OUTPUT CARD                   */
+/* ============================= */
+.output-card {
+background: var(–panel);
+border: 1px solid var(–border);
+border-radius: var(–radius);
+padding: var(–sp);
+display: flex;
+flex-direction: column;
+gap: 10px;
+box-shadow: var(–shadow);
+}
+.output-bar {
+display: flex;
+justify-content: space-between;
+align-items: center;
+font-size: 0.72rem;
+color: var(–text3);
+flex-wrap: wrap;
+gap: 6px;
+}
+.output-bar-left { font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(–text2); }
+.output-bar-right { display: flex; align-items: center; gap: 8px; }
+.output-bar-right #wpmLive {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 0.7rem;
+color: var(–accent-3);
+letter-spacing: .06em;
+}
+textarea#output {
+width: 100%;
+height: 130px;
+border-radius: 8px;
+background: var(–panel-2);
+border: 1px solid var(–border);
+color: var(–text);
+padding: 10px;
+resize: none;
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 0.88rem;
+line-height: 1.6;
+transition: var(–tr);
+}
+textarea#output:focus {
+border-color: var(–accent);
+box-shadow: 0 0 0 3px rgba(76,201,240,.15);
+outline: none;
+}
+textarea#output::placeholder { color: var(–text3); font-size: 0.82rem; }
+
+/* ============================= */
+/* STATS CARD                    */
+/* ============================= */
+.stats-card {
+background: var(–panel);
+border: 1px solid var(–border);
+border-radius: var(–radius);
+padding: var(–sp);
+display: flex;
+flex-direction: column;
+gap: 10px;
+box-shadow: var(–shadow);
+}
+.timer-display {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 2rem;
+font-weight: 600;
+color: var(–accent);
+letter-spacing: .04em;
+line-height: 1;
+}
+.timer-display.warn { color: var(–danger); }
+.timer-controls { display: flex; gap: 8px; }
+.timer-controls button { flex: 1; }
+.dur-chips { display: flex; gap: 5px; flex-wrap: wrap; }
+.dur-chips button {
+flex: 1;
+padding: 4px 6px;
+font-size: 0.72rem;
+background: var(–panel-2);
+color: var(–text2);
+border: 1px solid var(–border);
+}
+.dur-chips button.active { background: var(–accent); color: #000; border-color: var(–accent); }
+.stat-divider { height: 1px; background: var(–border); margin: 4px 0; }
+.stat-row {
+display: flex;
+justify-content: space-between;
+align-items: center;
+font-size: 0.8rem;
+}
+.stat-label { color: var(–text3); }
+.stat-val { font-family: ‘IBM Plex Mono’, monospace; font-weight: 600; }
+.stat-val.accent { color: var(–accent); }
+.stat-val.green  { color: #2ed573; }
+
+/* ============================= */
+/* STENO CHORD DISPLAY           */
+/* ============================= */
+.steno-chord-display {
+display: none;
+background: var(–panel-2);
+border: 1px solid var(–accent);
+border-radius: 8px;
+padding: 10px 16px;
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 1rem;
+color: var(–accent);
+text-align: center;
+letter-spacing: .12em;
+box-shadow: 0 0 12px rgba(76,201,240,.2);
+}
+
+/* ============================= */
+/* KEYBOARD WRAP                 */
+/* ============================= */
+.kb-wrap {
+background: var(–panel);
+border: 1px solid var(–border);
+border-radius: var(–radius);
+padding: 14px;
+box-shadow: var(–shadow);
+overflow-x: auto;
+}
+
+/* ============================= */
+/* KEYBOARD                      */
+/* ============================= */
+.keyboard {
+display: flex;
+flex-direction: column;
+gap: 5px;
+width: 100%;
+min-width: 480px;
+}
+.kr {
+display: flex;
+gap: 4px;
+}
+.k {
+flex: var(–kw, 1) 1 0;
+display: flex;
+justify-content: center;
+align-items: center;
+padding: 11px 4px;
+min-width: 0;
+border-radius: 7px;
+border: 1px solid var(–border);
+background: var(–panel-2);
+color: var(–text);
+font-family: ‘IBM Plex Mono’, monospace;
+cursor: pointer;
+position: relative;
+user-select: none;
+transition: background var(–tr), box-shadow var(–tr), transform .1s;
+font-size: 0.82rem;
+-webkit-user-select: none;
+}
+.k:hover { background: #2a2f40; }
+.k:active, .k.active { background: var(–accent); color: #000; }
+.k.glow { box-shadow: 0 0 10px rgba(76,201,240,.5); }
+.k.mod { background: #1e2330; color: var(–text2); font-size: 0.72rem; }
+.k.mod:hover { background: #252a3d; color: var(–text); }
+.k.mod.active { background: var(–accent); color: #000; }
+.k.space-key { flex: 6 1 0; }
+
+.k span.ks {
+position: absolute;
+top: 3px; right: 4px;
+font-size: 0.52rem;
+color: var(–text3);
+line-height: 1;
+}
+.k span.km { font-size: 0.82rem; line-height: 1; }
+
+/* steno key colors */
+.k.sk-l  { background: #1a2340; border-color: #2a3560; color: #7ab4f5; }
+.k.sk-r  { background: #1a2a25; border-color: #1e3830; color: #5fe3b0; }
+.k.sk-v  { background: #2a1a3a; border-color: #3a2055; color: #c47cf0; }
+.k.sk-star { background: #2a2020; border-color: #402828; color: var(–danger); }
+.k.sk-num { background: var(–panel-2); font-size: 0.7rem; color: var(–text3); }
+.k.sk-gap { background: transparent !important; border: none !important; cursor: default; }
+.steno-bot .k { padding-top: 18px; padding-bottom: 18px; }
+
+/* numpad */
+.numpad-wrap { display: flex; justify-content: center; }
+.numpad-inner { display: flex; flex-direction: column; gap: 5px; width: 280px; }
+
+/* ============================= */
+/* STATUS BAR                    */
+/* ============================= */
 .status-bar {
-  display:flex;
-  gap: var(--spacing);
-  justify-content: flex-start;
-  flex-wrap: wrap;
-  padding: var(--spacing) 0 0;
-  font-size: 0.75rem;
-  color: var(--text3);
+display: flex;
+gap: 12px;
+flex-wrap: wrap;
+font-size: 0.7rem;
+color: var(–text3);
+padding: 4px 0 2px;
 }
-.status-bar .si { display:flex; gap:4px; align-items:center; }
-.dot { display:inline-block; width:8px; height:8px; border-radius:50%; background:#555; }
-.dot.on { background: var(--accent); }
+.si { display: flex; align-items: center; gap: 5px; }
+.dot {
+display: inline-block;
+width: 7px; height: 7px;
+border-radius: 50%;
+background: #333;
+flex-shrink: 0;
+}
+.dot.on { background: var(–accent); box-shadow: 0 0 4px var(–accent); }
 
 /* ============================= */
-/* THEME SWATCHES */
-.theme-inline, .theme-grid { display:flex; gap:8px; flex-wrap:wrap; }
-.theme-swatch, .theme-card { width:28px; height:28px; border-radius:50%; border:2px solid #444; cursor:pointer; transition: var(--transition); }
-.theme-swatch.active, .theme-card.active { border-color: var(--accent); }
-.theme-card-label { font-size:0.65rem; text-align:center; margin-top:2px; color: var(--text2); }
+/* MOBILE DRAWER                 */
+/* ============================= */
+.drawer-backdrop {
+display: none;
+position: fixed;
+inset: 0;
+background: rgba(0,0,0,.5);
+z-index: 140;
+backdrop-filter: blur(2px);
+}
+.drawer-backdrop.open { display: block; }
+
+.mobile-drawer {
+position: fixed;
+bottom: 0; left: 0; right: 0;
+background: var(–panel);
+border-top: 1px solid var(–border);
+border-top-left-radius: 20px;
+border-top-right-radius: 20px;
+padding: 0 var(–sp) calc(var(–sp) + env(safe-area-inset-bottom));
+max-width: 520px;
+margin: 0 auto;
+z-index: 150;
+box-shadow: 0 -8px 40px rgba(0,0,0,.5);
+transform: translateY(100%);
+transition: transform 0.28s cubic-bezier(.32,.72,0,1);
+}
+.mobile-drawer.open { transform: translateY(0); }
+
+.drawer-handle {
+width: 40px; height: 4px;
+background: var(–border);
+border-radius: 2px;
+margin: 12px auto 16px;
+}
+.drawer-top {
+display: flex;
+align-items: center;
+justify-content: space-between;
+margin-bottom: 16px;
+}
+.drawer-top .logo { font-size: 1rem; }
+.drawer-close-btn {
+background: var(–panel-2);
+color: var(–text);
+border: 1px solid var(–border);
+width: 32px; height: 32px;
+border-radius: 50%;
+padding: 0;
+font-size: 0.8rem;
+}
+.drawer-section {
+margin-bottom: 18px;
+}
+.drawer-section-title {
+font-size: 0.65rem;
+font-weight: 700;
+letter-spacing: .1em;
+text-transform: uppercase;
+color: var(–text3);
+margin-bottom: 10px;
+}
+.drawer-section .theme-grid {
+display: flex;
+gap: 10px;
+flex-wrap: wrap;
+}
+.theme-card {
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 4px;
+cursor: pointer;
+}
+.theme-preview {
+width: 44px; height: 44px;
+border-radius: 10px;
+border: 2px solid var(–border);
+position: relative;
+overflow: hidden;
+transition: var(–tr);
+}
+.theme-card.active .theme-preview { border-color: var(–accent); box-shadow: 0 0 0 2px var(–accent); }
+.tp-bg { position: absolute; inset: 0; }
+.tp-key {
+position: absolute;
+bottom: 6px; left: 50%; transform: translateX(-50%);
+width: 60%; height: 28%;
+border-radius: 4px;
+opacity: .9;
+}
+.tp-dot {
+position: absolute;
+top: 6px; right: 6px;
+width: 8px; height: 8px;
+border-radius: 50%;
+}
+.theme-check {
+font-size: 0.7rem;
+color: var(–accent);
+opacity: 0;
+transition: var(–tr);
+}
+.theme-card.active .theme-check { opacity: 1; }
+.theme-card-label { font-size: 0.62rem; color: var(–text2); }
+.drawer-sound-row {
+display: flex;
+align-items: center;
+justify-content: space-between;
+gap: 12px;
+margin-bottom: 8px;
+}
+.drawer-sound-row span { font-size: 0.72rem; color: var(–text2); white-space: nowrap; }
+.drawer-sound-row input[type=“range”] { flex: 1; max-width: 130px; }
+.drawer-sound-row select { width: auto; padding: 5px 8px; font-size: 0.76rem; }
+.drawer-actions { display: flex; flex-direction: column; gap: 6px; }
+.drawer-actions button { justify-content: flex-start; gap: 8px; }
 
 /* ============================= */
-/* STAT CARD */
-.stats-card { background: var(--panel); border-radius: var(--radius); padding:var(--spacing); display:flex; flex-direction:column; gap:0.5rem; min-width:220px; box-shadow: var(--shadow);}
-.timer-display { font-size:1.5rem; font-weight:700; color: var(--accent);}
-.timer-controls { display:flex; gap:0.5rem; }
-.dur-chips { display:flex; gap:0.25rem; margin-top:0.5rem;}
-.stat-row { display:flex; justify-content:space-between; }
-.stat-val.accent { color: var(--accent); }
-.stat-val.green { color: #2ed573; }
+/* OVERLAYS / MODALS             */
+/* ============================= */
+.overlay {
+display: none;
+position: fixed;
+inset: 0;
+background: rgba(0,0,0,.65);
+align-items: center;
+justify-content: center;
+z-index: 200;
+padding: var(–sp);
+backdrop-filter: blur(4px);
+}
+.overlay.open { display: flex; animation: fadeIn .2s ease forwards; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes popIn  { from { opacity: 0; transform: scale(.94) translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* Score Modal */
+.score-modal {
+background: var(–panel);
+border: 1px solid var(–border);
+border-radius: 16px;
+padding: 24px;
+max-width: 440px;
+width: 100%;
+display: flex;
+flex-direction: column;
+gap: 16px;
+box-shadow: 0 20px 60px rgba(0,0,0,.5);
+animation: popIn .25s ease forwards;
+}
+.score-modal h2 { font-size: 1.2rem; font-weight: 800; }
+.score-grade {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 3.5rem;
+font-weight: 600;
+line-height: 1;
+text-align: center;
+}
+.score-msg { color: var(–text2); font-size: 0.88rem; text-align: center; }
+.score-grid {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 10px;
+}
+.score-cell {
+background: var(–panel-2);
+border: 1px solid var(–border);
+border-radius: 10px;
+padding: 12px;
+display: flex;
+flex-direction: column;
+gap: 4px;
+}
+.score-cell .label { font-size: 0.68rem; color: var(–text3); text-transform: uppercase; letter-spacing: .06em; }
+.score-cell .value {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 1.3rem;
+font-weight: 600;
+color: var(–text);
+}
+.score-cell .value.hi { color: var(–accent); }
+.score-cell .value.green { color: #2ed573; }
+.score-bar {
+height: 5px;
+background: var(–border);
+border-radius: 3px;
+margin-top: 6px;
+overflow: hidden;
+}
+.score-bar-fill {
+height: 100%;
+background: var(–accent);
+border-radius: 3px;
+transition: width 0.8s cubic-bezier(.25,.46,.45,.94);
+}
+.score-actions {
+display: flex;
+gap: 10px;
+justify-content: flex-end;
+flex-wrap: wrap;
+}
+
+/* BT Modal */
+.bt-modal {
+background: var(–panel);
+border: 1px solid var(–border);
+border-radius: 16px;
+padding: 24px;
+max-width: 420px;
+width: 100%;
+display: flex;
+flex-direction: column;
+gap: 14px;
+box-shadow: 0 20px 60px rgba(0,0,0,.5);
+animation: popIn .25s ease forwards;
+}
+.bt-modal h2 { font-size: 1.2rem; font-weight: 800; }
+.bt-modal p { font-size: 0.86rem; color: var(–text2); line-height: 1.6; }
+.bt-modal code {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 0.82rem;
+background: var(–panel-2);
+padding: 2px 6px;
+border-radius: 4px;
+color: var(–accent);
+}
+.modal-btns { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }
 
 /* ============================= */
-/* OUTPUT CARD */
-.output-card { display:flex; flex-direction:column; gap:0.5rem; }
-.output-bar { display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; color: var(--text3); }
-textarea#output { width:100%; height:160px; border-radius:8px; background:var(--panel-2); border:1px solid var(--border); color:var(--text); padding:8px; resize:none; font-family:'IBM Plex Mono', monospace; transition: var(--transition); }
-
-textarea#output:focus { box-shadow: 0 0 6px var(--accent); border-color: var(--accent); }
-
+/* TOAST                         */
 /* ============================= */
-/* TOASTS / NOTIFICATIONS */
 .toast {
-  position: fixed;
-  bottom: var(--spacing);
-  right: var(--spacing);
-  background: var(--panel-2);
-  color: var(--text);
-  padding: var(--spacing);
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow);
-  animation: slideUp 0.3s ease forwards;
-  z-index: 300;
+position: fixed;
+bottom: calc(var(–sp) + env(safe-area-inset-bottom));
+right: var(–sp);
+background: var(–panel-2);
+color: var(–text);
+padding: 12px 18px;
+border-radius: var(–radius);
+border: 1px solid var(–border);
+box-shadow: var(–shadow);
+font-size: 0.85rem;
+z-index: 300;
+animation: toastIn .25s ease forwards;
 }
-@keyframes slideUp { from { opacity:0; transform: translateY(20px);} to {opacity:1; transform: translateY(0);} }
+@keyframes toastIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 
 /* ============================= */
-/* UTILITY */
-.muted { color: var(--muted); }
-.accent { color: var(--accent); }
-.center { text-align:center; }
-.hidden { display:none !important; }
-.pulse { animation: pulse var(--pulse) infinite; }
-@keyframes pulse { 0% { transform: scale(1);} 50% { transform: scale(1.03);} 100% { transform: scale(1);} }
-
+/* UTILITIES                     */
 /* ============================= */
-/* MEDIA QUERIES */
-@media (min-width: 768px){
-  :root { --spacing:20px; }
-  header.app-header { height: calc(64px + env(safe-area-inset-top)); }
-  button, .chip { padding: 8px 14px; }
-}
-@media (min-width: 1024px){
-  main { padding-top:32px; padding-bottom:32px; }
-  .panel { padding:24px; }
-}
-@media (min-width:1600px){
-  main { max-width:1300px; }
-}
-@media (orientation: landscape) and (max-height:500px){
-  header.app-header { height: calc(48px + env(safe-area-inset-top)); }
-}
+.hidden { display: none !important; }
+.accent { color: var(–accent); }
+.muted  { color: var(–muted); }
 
+@media (min-width: 1600px) { main { max-width: 1280px; } }
+@media (orientation: landscape) and (max-height: 500px) {
+textarea#output { height: 80px; }
+.keyboard .k { padding: 7px 4px; }
+}
 </style>
+
 </head>
 
 <body data-theme="midnight">
 
+<!-- DRAWER BACKDROP (sibling, not child of drawer) -->
+
+<div class="drawer-backdrop" id="drawerBackdrop"></div>
+
 <header class="app-header">
-  <div class="logo">Key<span>Flow</span></div>
-  <div class="header-center">
-    <div class="theme-inline">
-      <span style="font-size:.6rem;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-right:2px">Theme</span>
-      <div class="theme-swatch swatch-midnight active" data-t="midnight" title="Midnight"></div>
-      <div class="theme-swatch swatch-slate" data-t="slate" title="Slate"></div>
-      <div class="theme-swatch swatch-ember" data-t="ember" title="Ember"></div>
-      <div class="theme-swatch swatch-arctic" data-t="arctic" title="Arctic"></div>
-      <div class="theme-swatch swatch-noir" data-t="noir" title="Noir"></div>
-    </div>
-    <div class="sound-row">
-      <label>🎵</label>
-      <input type="range" id="volSlider" min="0" max="1" step="0.05" value="0.4">
-      <select id="soundPreset" class="chip">
-        <option value="bell">Bell</option>
-        <option value="soft">Soft Pad</option>
-        <option value="click">Crystal</option>
-        <option value="harp">Harp</option>
-        <option value="chime">Chime</option>
-      </select>
-    </div>
-  </div>
-  <div class="header-right">
-    <button class="chip" id="btBtn">⬡ BT <span class="dot" id="btDot" style="display:inline-block"></span></button>
-    <button class="chip" id="shiftBtn">⇧ Shift</button>
-    <button class="chip danger" id="clearBtn">✕ Clear</button>
-    <button class="menu-toggle" id="menuToggle" aria-label="Settings">☰</button>
+  <div class="header-inner">
+    <div class="logo">Key<span>Flow</span></div>
+
+```
+<!-- Theme swatches — desktop only -->
+<div class="theme-inline">
+  <span class="th-label">Theme</span>
+  <div class="theme-swatch" style="background:#10121a" data-t="midnight" title="Midnight"></div>
+  <div class="theme-swatch" style="background:#f0f2f5;border-color:#ccc" data-t="slate"    title="Slate"></div>
+  <div class="theme-swatch" style="background:#e89040" data-t="ember"    title="Ember"></div>
+  <div class="theme-swatch" style="background:#0077cc" data-t="arctic"   title="Arctic"></div>
+  <div class="theme-swatch" style="background:#c0c0cc" data-t="noir"     title="Noir"></div>
+</div>
+
+<!-- Sound controls — desktop only -->
+<div class="header-sound">
+  <label title="Volume">🎵</label>
+  <input type="range" id="volSlider" min="0" max="1" step="0.05" value="0.4">
+  <select id="soundPreset">
+    <option value="bell">Bell</option>
+    <option value="soft">Soft Pad</option>
+    <option value="click">Crystal</option>
+    <option value="harp">Harp</option>
+    <option value="chime">Chime</option>
+  </select>
+</div>
+
+<div class="header-actions">
+  <button id="btBtn">⬡ BT <span class="dot" id="btDot"></span></button>
+  <button id="shiftBtn" class="secondary">⇧ Shift</button>
+  <button id="clearBtn" class="danger">✕</button>
+  <button class="menu-toggle" id="menuToggle" aria-label="Menu">☰</button>
+</div>
+```
+
   </div>
 </header>
 
-<!-- MOBILE DRAWER -->
-
-<div class="mobile-drawer" id="mobileDrawer">
-  <div class="drawer-backdrop" id="drawerBackdrop"></div>
-  <div class="drawer-panel">
-
-    <div class="drawer-top">
-      <div class="logo" style="font-size:1rem">Key<span>Flow</span></div>
-      <button class="drawer-close-btn" id="drawerClose">✕</button>
-    </div>
-
-    <div>
-      <div class="drawer-section-title">Theme</div>
-      <div class="theme-grid" id="drawerThemeGrid"></div>
-    </div>
-
-    <div>
-      <div class="drawer-section-title">Sound</div>
-      <div style="display:flex;flex-direction:column;gap:.65rem">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem">
-          <span style="font-size:.68rem;color:var(--text2)">Volume</span>
-          <input type="range" id="volSliderMobile" min="0" max="1" step="0.05" value="0.4" style="flex:1;max-width:130px">
-        </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem">
-          <span style="font-size:.68rem;color:var(--text2)">Sound</span>
-          <select id="soundPresetMobile" class="chip">
-            <option value="bell">Bell</option>
-            <option value="soft">Soft Pad</option>
-            <option value="click">Crystal</option>
-            <option value="harp">Harp</option>
-            <option value="chime">Chime</option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-    <div>
-      <div class="drawer-section-title">Actions</div>
-      <div style="display:flex;flex-direction:column;gap:.45rem">
-        <button class="chip" id="drawerShiftBtn" style="justify-content:flex-start">⇧ Toggle Shift</button>
-        <button class="chip" id="drawerCopyBtn" style="justify-content:flex-start">⧉ Copy Output</button>
-        <button class="chip" id="drawerBtBtn" style="justify-content:flex-start">⬡ Bluetooth</button>
-        <button class="chip danger" id="drawerClearBtn" style="justify-content:flex-start">✕ Clear Output</button>
-      </div>
-    </div>
-
-  </div>
-</div>
+<!-- LAYOUT TABS -->
 
 <div class="layout-tabs">
   <button class="ltab active" data-layout="qwerty">QWERTY</button>
@@ -532,46 +813,61 @@ textarea#output:focus { box-shadow: 0 0 6px var(--accent); border-color: var(--a
   <button class="ltab" data-layout="numpad">Numpad</button>
 </div>
 
-<main class="app-body">
+<!-- MAIN -->
+
+<main>
+
+  <!-- TOP ROW: output + stats -->
+
   <div class="top-row">
-    <div class="output-card">
-      <div class="output-bar">
-        <span>Output</span>
-        <div class="output-bar-right">
-          <span id="charCount" style="color:var(--text3)">0 chars</span>
-          <span id="wpmLive" style="color:var(--accent3);font-size:.62rem;letter-spacing:.06em">- WPM</span>
-          <button class="chip" id="copyBtn" style="padding:.2rem .5rem">Copy</button>
-        </div>
-      </div>
-      <textarea id="output" placeholder="Start typing - session timer begins on first keystroke..." spellcheck="false"></textarea>
-    </div>
-    
-<div class="stats-card">
-      <div class="timer-display" id="timerDisplay">0:00</div>
-      <div class="timer-controls">
-        <button class="chip" id="timerStartBtn">▶ Start</button>
-        <button class="chip" id="timerResetBtn">↺</button>
-      </div>
-      <div class="dur-chips">
-        <button class="chip active" data-dur="60">1 min</button>
-        <button class="chip" data-dur="120">2 min</button>
-        <button class="chip" data-dur="300">5 min</button>
-      </div>
 
-      <div class="stat-divider"></div>
-
-      <div class="stat-row"><span class="stat-label">WPM</span><span class="stat-val accent" id="statWpm">-</span></div>
-      <div class="stat-row"><span class="stat-label">Chars</span><span class="stat-val" id="statChars">0</span></div>
-      <div class="stat-row"><span class="stat-label">Words</span><span class="stat-val" id="statWords">0</span></div>
-      <div class="stat-row"><span class="stat-label">Keys</span><span class="stat-val green" id="statKeys">0</span></div>
+```
+<div class="output-card">
+  <div class="output-bar">
+    <span class="output-bar-left">Output</span>
+    <div class="output-bar-right">
+      <span id="charCount">0 chars</span>
+      <span id="wpmLive">— WPM</span>
+      <button id="copyBtn" style="padding:4px 10px;font-size:.72rem">Copy</button>
     </div>
   </div>
+  <textarea id="output" placeholder="Start typing — session timer begins on first keystroke…" spellcheck="false"></textarea>
+</div>
+
+<div class="stats-card">
+  <div class="timer-display" id="timerDisplay">0:00</div>
+  <div class="timer-controls">
+    <button id="timerStartBtn">▶ Start</button>
+    <button id="timerResetBtn" class="secondary">↺ Reset</button>
+  </div>
+  <div class="dur-chips">
+    <button class="active" data-dur="60">1 min</button>
+    <button data-dur="120">2 min</button>
+    <button data-dur="300">5 min</button>
+  </div>
+
+  <div class="stat-divider"></div>
+
+  <div class="stat-row"><span class="stat-label">WPM</span><span class="stat-val accent" id="statWpm">—</span></div>
+  <div class="stat-row"><span class="stat-label">Chars</span><span class="stat-val" id="statChars">0</span></div>
+  <div class="stat-row"><span class="stat-label">Words</span><span class="stat-val" id="statWords">0</span></div>
+  <div class="stat-row"><span class="stat-label">Keys</span><span class="stat-val green" id="statKeys">0</span></div>
+</div>
+```
+
+  </div><!-- /top-row -->
+
+  <!-- Steno chord indicator -->
 
   <div class="steno-chord-display" id="stenoChord"></div>
+
+  <!-- Keyboard -->
 
   <div class="kb-wrap">
     <div class="keyboard" id="keyboard"></div>
   </div>
+
+  <!-- Status bar -->
 
   <div class="status-bar">
     <div class="si"><span class="dot" id="dotShift"></span><span id="lblShift">Shift</span></div>
@@ -581,7 +877,51 @@ textarea#output:focus { box-shadow: 0 0 6px var(--accent); border-color: var(--a
     <div class="si"><span class="dot on"></span><span id="lblLayout">QWERTY</span></div>
     <div class="si"><span class="dot" id="dotTimer"></span><span id="lblTimer">Timer: Ready</span></div>
   </div>
+
 </main>
+
+<!-- MOBILE DRAWER -->
+
+<div class="mobile-drawer" id="mobileDrawer">
+  <div class="drawer-handle"></div>
+  <div class="drawer-top">
+    <div class="logo">Key<span>Flow</span></div>
+    <button class="drawer-close-btn" id="drawerClose">✕</button>
+  </div>
+
+  <div class="drawer-section">
+    <div class="drawer-section-title">Theme</div>
+    <div class="theme-grid" id="drawerThemeGrid"></div>
+  </div>
+
+  <div class="drawer-section">
+    <div class="drawer-section-title">Sound</div>
+    <div class="drawer-sound-row">
+      <span>Volume</span>
+      <input type="range" id="volSliderMobile" min="0" max="1" step="0.05" value="0.4">
+    </div>
+    <div class="drawer-sound-row">
+      <span>Sound</span>
+      <select id="soundPresetMobile">
+        <option value="bell">Bell</option>
+        <option value="soft">Soft Pad</option>
+        <option value="click">Crystal</option>
+        <option value="harp">Harp</option>
+        <option value="chime">Chime</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="drawer-section">
+    <div class="drawer-section-title">Actions</div>
+    <div class="drawer-actions">
+      <button id="drawerShiftBtn" class="secondary">⇧ Toggle Shift</button>
+      <button id="drawerCopyBtn" class="secondary">⧉ Copy Output</button>
+      <button id="drawerBtBtn" class="secondary">⬡ Bluetooth</button>
+      <button id="drawerClearBtn" class="danger">✕ Clear Output</button>
+    </div>
+  </div>
+</div>
 
 <!-- SCORE MODAL -->
 
@@ -602,8 +942,8 @@ textarea#output:focus { box-shadow: 0 0 6px var(--accent); border-color: var(--a
       </div>
     </div>
     <div class="score-actions">
-      <button class="chip active" id="scoreClose">New Session</button>
-      <button class="chip" id="scoreCopy">Copy Results</button>
+      <button id="scoreClose">New Session</button>
+      <button id="scoreCopy" class="secondary">Copy Results</button>
     </div>
   </div>
 </div>
@@ -617,8 +957,8 @@ textarea#output:focus { box-shadow: 0 0 6px var(--accent); border-color: var(--a
     <p><strong style="color:var(--text)">Best setup:</strong> An ESP32 running BLE HID firmware acts as a wireless keyboard bridge.</p>
     <p>No BLE? Use <strong style="color:var(--text)">Copy</strong> and paste anywhere.</p>
     <div class="modal-btns">
-      <button class="chip active" id="btConnect">Scan & Connect</button>
-      <button class="chip" id="btClose">Cancel</button>
+      <button id="btConnect">Scan & Connect</button>
+      <button id="btClose" class="secondary">Cancel</button>
     </div>
   </div>
 </div>
@@ -626,81 +966,113 @@ textarea#output:focus { box-shadow: 0 0 6px var(--accent); border-color: var(--a
 <script>
 'use strict';
 
-/* ── THEMES ── */
-const THEMES=[
-  {id:'midnight',label:'Midnight',bg:'#10121a',key:'#252a3d',accent:'#5e9ff2'},
-  {id:'slate',   label:'Slate',   bg:'#f0f2f5',key:'#ffffff',accent:'#3b6fd4'},
-  {id:'ember',   label:'Ember',   bg:'#12100e',key:'#2a2620',accent:'#e89040'},
-  {id:'arctic',  label:'Arctic',  bg:'#f8fbff',key:'#ffffff',accent:'#0077cc'},
-  {id:'noir',    label:'Noir',    bg:'#050506',key:'#1a1a1e',accent:'#c0c0cc'}
+/* ── THEMES ─────────────────────────────────────── */
+const THEMES = [
+  {id:'midnight', label:'Midnight', bg:'#10121a', key:'#252a3d', accent:'#5e9ff2'},
+  {id:'slate',    label:'Slate',    bg:'#f0f2f5', key:'#ffffff', accent:'#3b6fd4'},
+  {id:'ember',    label:'Ember',    bg:'#12100e', key:'#2a2620', accent:'#e89040'},
+  {id:'arctic',   label:'Arctic',  bg:'#f8fbff', key:'#ffffff', accent:'#0077cc'},
+  {id:'noir',     label:'Noir',    bg:'#050506', key:'#1a1a1e', accent:'#c0c0cc'}
 ];
-function buildThemeCards(){
-  const grid=document.getElementById('drawerThemeGrid');
-  const cur=document.body.getAttribute('data-theme')||'midnight';
-  grid.innerHTML='';
-  THEMES.forEach(t=>{
-    const card=document.createElement('div');
-    card.className='theme-card'+(t.id===cur?' active':'');
-    card.dataset.t=t.id;
-    card.innerHTML=`
+const THEME_VARS = {
+  midnight: {'--bg':'#0f1115','--panel':'#1a1d24','--panel-2':'#222631','--accent':'#4cc9f0','--accent-2':'#80ffdb','--text':'#e6e9ef','--text2':'#b0b7c1','--text3':'#8a92a0','--border':'#2c3240'},
+  slate:    {'--bg':'#f0f2f5','--panel':'#ffffff','--panel-2':'#f5f7fa','--accent':'#3b6fd4','--accent-2':'#00bcd4','--text':'#1a1d24','--text2':'#4a5568','--text3':'#718096','--border':'#dde1e8'},
+  ember:    {'--bg':'#12100e','--panel':'#1e1a16','--panel-2':'#2a2320','--accent':'#e89040','--accent-2':'#f0c060','--text':'#f0e6d8','--text2':'#c8b49a','--text3':'#9a8474','--border':'#3a3028'},
+  arctic:   {'--bg':'#f8fbff','--panel':'#ffffff','--panel-2':'#eef3fb','--accent':'#0077cc','--accent-2':'#00b4d8','--text':'#1a2636','--text2':'#4a6080','--text3':'#6a8090','--border':'#d0dae8'},
+  noir:     {'--bg':'#050506','--panel':'#0e0e10','--panel-2':'#1a1a1e','--accent':'#c0c0cc','--accent-2':'#e0e0ec','--text':'#d8d8e0','--text2':'#9090a0','--text3':'#606068','--border':'#282830'}
+};
+
+function applyTheme(id) {
+  const vars = THEME_VARS[id] || THEME_VARS.midnight;
+  const root = document.documentElement;
+  Object.entries(vars).forEach(([k,v]) => root.style.setProperty(k, v));
+  document.body.setAttribute('data-theme', id);
+  document.querySelectorAll('.theme-swatch').forEach(s => s.classList.toggle('active', s.dataset.t === id));
+  document.querySelectorAll('.theme-card').forEach(c => c.classList.toggle('active', c.dataset.t === id));
+}
+
+function buildThemeCards() {
+  const grid = document.getElementById('drawerThemeGrid');
+  const cur  = document.body.getAttribute('data-theme') || 'midnight';
+  grid.innerHTML = '';
+  THEMES.forEach(t => {
+    const card = document.createElement('div');
+    card.className = 'theme-card' + (t.id === cur ? ' active' : '');
+    card.dataset.t = t.id;
+    card.innerHTML = `
       <div class="theme-preview">
-        <div class="tp-bg" style="background:${t.bg}"></div>
+        <div class="tp-bg"  style="background:${t.bg}"></div>
         <div class="tp-key" style="background:${t.key}"></div>
         <div class="tp-dot" style="background:${t.accent}"></div>
       </div>
       <div class="theme-card-label">${t.label}</div>
       <div class="theme-check">✓</div>`;
-    card.addEventListener('click',()=>applyTheme(t.id));
+    card.addEventListener('click', () => applyTheme(t.id));
     grid.appendChild(card);
   });
 }
-function applyTheme(id){
-  document.body.setAttribute('data-theme',id);
-  document.querySelectorAll('.theme-swatch').forEach(s=>s.classList.toggle('active',s.dataset.t===id));
-  document.querySelectorAll('.theme-card').forEach(c=>c.classList.toggle('active',c.dataset.t===id));
-}
 
-/* ── AUDIO ── */
+/* ── AUDIO ───────────────────────────────────────── */
 let _ctx;
-const getCtx=()=>{if(!_ctx)_ctx=new(window.AudioContext||window.webkitAudioContext)();if(_ctx.state==='suspended')_ctx.resume();return _ctx};
-const getVol=()=>+(document.getElementById('volSliderMobile')?.value??document.getElementById('volSlider')?.value??0.4);
-const getSP=()=>document.getElementById('soundPresetMobile')?.value||document.getElementById('soundPreset')?.value||'bell';
-function playTone(){
-  const vol=getVol();if(!vol)return;
-  const preset=getSP(),ctx=getCtx(),t=ctx.currentTime;
-  const osc=(type,freq,peak,decay,dest)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(peak*vol,t);g.gain.exponentialRampToValueAtTime(0.0001,t+decay);o.connect(g);g.connect(dest||ctx.destination);o.start(t);o.stop(t+decay)};
-  const SCALE=[523.25,587.33,659.25,698.46,783.99,880];
-  const pick=a=>a[Math.floor(Math.random()*a.length)];
-  ({
-    bell:()=>{osc('sine',880+Math.random()*400,.3,.8);osc('sine',1760+Math.random()*600,.08,.35)},
-    soft:()=>[1,1.5,2].forEach((r,i)=>osc('sine',330*r,.08/(i+1),.65)),
-    click:()=>{osc('triangle',1100,.25,.04);osc('sine',380,.1,.1)},
-    harp:()=>osc('triangle',pick(SCALE),.28,1.2),
-    chime:()=>{const f=pick(SCALE),o=ctx.createOscillator(),g=ctx.createGain(),d=ctx.createDelay(.3);o.type='sine';o.frequency.value=f;d.delayTime.value=.065;g.gain.setValueAtTime(.2*vol,t);g.gain.exponentialRampToValueAtTime(0.0001,t+1.5);o.connect(g);g.connect(d);d.connect(ctx.destination);g.connect(ctx.destination);o.start(t);o.stop(t+1.5)}
-  }[preset]||(_=>{}))();
-}
-document.getElementById('volSlider').addEventListener('input',e=>document.getElementById('volSliderMobile').value=e.target.value);
-document.getElementById('volSliderMobile').addEventListener('input',e=>document.getElementById('volSlider').value=e.target.value);
-document.getElementById('soundPreset').addEventListener('change',e=>document.getElementById('soundPresetMobile').value=e.target.value);
-document.getElementById('soundPresetMobile').addEventListener('change',e=>document.getElementById('soundPreset').value=e.target.value);
+const getCtx = () => {
+  if (!_ctx) _ctx = new (window.AudioContext || window.webkitAudioContext)();
+  if (_ctx.state === 'suspended') _ctx.resume();
+  return _ctx;
+};
+const getVol = () => parseFloat(document.getElementById('volSlider').value);
+const getSP  = () => document.getElementById('soundPreset').value;
 
-/* ── LAYOUT DATA ── */
-const KBD={
-  qwerty:{name:'QWERTY',rows:[
+function playTone() {
+  const vol = getVol(); if (!vol) return;
+  const preset = getSP(), ctx = getCtx(), t = ctx.currentTime;
+  const osc = (type, freq, peak, decay, dest) => {
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = type; o.frequency.value = freq;
+    g.gain.setValueAtTime(peak * vol, t);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + decay);
+    o.connect(g); g.connect(dest || ctx.destination);
+    o.start(t); o.stop(t + decay);
+  };
+  const SCALE = [523.25, 587.33, 659.25, 698.46, 783.99, 880];
+  const pick  = a => a[Math.floor(Math.random() * a.length)];
+  ({
+    bell:  () => { osc('sine', 880 + Math.random()*400, .3, .8); osc('sine', 1760 + Math.random()*600, .08, .35); },
+    soft:  () => [1,1.5,2].forEach((r,i) => osc('sine', 330*r, .08/(i+1), .65)),
+    click: () => { osc('triangle', 1100, .25, .04); osc('sine', 380, .1, .1); },
+    harp:  () => osc('triangle', pick(SCALE), .28, 1.2),
+    chime: () => {
+      const f=pick(SCALE), o=ctx.createOscillator(), g=ctx.createGain(), d=ctx.createDelay(.3);
+      o.type='sine'; o.frequency.value=f; d.delayTime.value=.065;
+      g.gain.setValueAtTime(.2*vol,t); g.gain.exponentialRampToValueAtTime(0.0001,t+1.5);
+      o.connect(g); g.connect(d); d.connect(ctx.destination); g.connect(ctx.destination);
+      o.start(t); o.stop(t+1.5);
+    }
+  }[preset] || (() => {}))();
+}
+
+// Sync mobile ↔ desktop controls
+document.getElementById('volSlider').addEventListener('input', e => document.getElementById('volSliderMobile').value = e.target.value);
+document.getElementById('volSliderMobile').addEventListener('input', e => document.getElementById('volSlider').value = e.target.value);
+document.getElementById('soundPreset').addEventListener('change', e => document.getElementById('soundPresetMobile').value = e.target.value);
+document.getElementById('soundPresetMobile').addEventListener('change', e => document.getElementById('soundPreset').value = e.target.value);
+
+/* ── LAYOUT DATA ─────────────────────────────────── */
+const KBD = {
+  qwerty: {name:'QWERTY', rows:[
     [{v:'`',s:'~'},{v:'1',s:'!'},{v:'2',s:'@'},{v:'3',s:'#'},{v:'4',s:'$'},{v:'5',s:'%'},{v:'6',s:'^'},{v:'7',s:'&'},{v:'8',s:'*'},{v:'9',s:'('},{v:'0',s:')'},{v:'-',s:'_'},{v:'=',s:'+'},{v:'⌫',k:'backspace',w:2,cls:'mod single'}],
     [{v:'Tab',k:'tab',w:1.5,cls:'mod single'},{v:'q',s:'Q'},{v:'w',s:'W'},{v:'e',s:'E'},{v:'r',s:'R'},{v:'t',s:'T'},{v:'y',s:'Y'},{v:'u',s:'U'},{v:'i',s:'I'},{v:'o',s:'O'},{v:'p',s:'P'},{v:'[',s:'{'},{v:']',s:'}'},{v:'\\',s:'|',w:1.5,cls:'mod single'}],
     [{v:'Caps',k:'caps',w:1.75,cls:'mod single'},{v:'a',s:'A'},{v:'s',s:'S'},{v:'d',s:'D'},{v:'f',s:'F'},{v:'g',s:'G'},{v:'h',s:'H'},{v:'j',s:'J'},{v:'k',s:'K'},{v:'l',s:'L'},{v:';',s:':'},{v:"'",s:'"'},{v:'Enter',k:'enter',w:2.35,cls:'mod single'}],
     [{v:'⇧',k:'shift',w:2.35,cls:'mod single'},{v:'z',s:'Z'},{v:'x',s:'X'},{v:'c',s:'C'},{v:'v',s:'V'},{v:'b',s:'B'},{v:'n',s:'N'},{v:'m',s:'M'},{v:',',s:'<'},{v:'.',s:'>'},{v:'/',s:'?'},{v:'⇧',k:'shift',w:2.85,cls:'mod single'}],
     [{v:'Ctrl',k:'ctrl',w:1.4,cls:'mod single'},{v:'⌘',k:'cmd',w:1.2,cls:'mod single'},{v:'Alt',k:'alt',w:1.2,cls:'mod single'},{v:'',k:'space',w:6.3,cls:'space-key single'},{v:'Alt',k:'alt',w:1.2,cls:'mod single'},{v:'⌘',k:'cmd',w:1.2,cls:'mod single'},{v:'Ctrl',k:'ctrl',w:1.4,cls:'mod single'}]
   ]},
-  dvorak:{name:'Dvorak',rows:[
+  dvorak: {name:'Dvorak', rows:[
     [{v:'`',s:'~'},{v:'1',s:'!'},{v:'2',s:'@'},{v:'3',s:'#'},{v:'4',s:'$'},{v:'5',s:'%'},{v:'6',s:'^'},{v:'7',s:'&'},{v:'8',s:'*'},{v:'9',s:'('},{v:'0',s:')'},{v:'[',s:'{'},{v:']',s:'}'},{v:'⌫',k:'backspace',w:2,cls:'mod single'}],
     [{v:'Tab',k:'tab',w:1.5,cls:'mod single'},{v:"'",s:'"'},{v:',',s:'<'},{v:'.',s:'>'},{v:'p',s:'P'},{v:'y',s:'Y'},{v:'f',s:'F'},{v:'g',s:'G'},{v:'c',s:'C'},{v:'r',s:'R'},{v:'l',s:'L'},{v:'/',s:'?'},{v:'=',s:'+'},{v:'\\',s:'|',w:1.5,cls:'mod single'}],
     [{v:'Caps',k:'caps',w:1.75,cls:'mod single'},{v:'a',s:'A'},{v:'o',s:'O'},{v:'e',s:'E'},{v:'u',s:'U'},{v:'i',s:'I'},{v:'d',s:'D'},{v:'h',s:'H'},{v:'t',s:'T'},{v:'n',s:'N'},{v:'s',s:'S'},{v:'-',s:'_'},{v:'Enter',k:'enter',w:2.35,cls:'mod single'}],
     [{v:'⇧',k:'shift',w:2.35,cls:'mod single'},{v:';',s:':'},{v:'q',s:'Q'},{v:'j',s:'J'},{v:'k',s:'K'},{v:'x',s:'X'},{v:'b',s:'B'},{v:'m',s:'M'},{v:'w',s:'W'},{v:'v',s:'V'},{v:'z',s:'Z'},{v:'⇧',k:'shift',w:2.85,cls:'mod single'}],
     [{v:'Ctrl',k:'ctrl',w:1.4,cls:'mod single'},{v:'⌘',k:'cmd',w:1.2,cls:'mod single'},{v:'Alt',k:'alt',w:1.2,cls:'mod single'},{v:'',k:'space',w:6.3,cls:'space-key single'},{v:'Alt',k:'alt',w:1.2,cls:'mod single'},{v:'⌘',k:'cmd',w:1.2,cls:'mod single'},{v:'Ctrl',k:'ctrl',w:1.4,cls:'mod single'}]
   ]},
-  colemak:{name:'Colemak',rows:[
+  colemak: {name:'Colemak', rows:[
     [{v:'`',s:'~'},{v:'1',s:'!'},{v:'2',s:'@'},{v:'3',s:'#'},{v:'4',s:'$'},{v:'5',s:'%'},{v:'6',s:'^'},{v:'7',s:'&'},{v:'8',s:'*'},{v:'9',s:'('},{v:'0',s:')'},{v:'-',s:'_'},{v:'=',s:'+'},{v:'⌫',k:'backspace',w:2,cls:'mod single'}],
     [{v:'Tab',k:'tab',w:1.5,cls:'mod single'},{v:'q',s:'Q'},{v:'w',s:'W'},{v:'f',s:'F'},{v:'p',s:'P'},{v:'g',s:'G'},{v:'j',s:'J'},{v:'l',s:'L'},{v:'u',s:'U'},{v:'y',s:'Y'},{v:';',s:':'},{v:'[',s:'{'},{v:']',s:'}'},{v:'\\',s:'|',w:1.5,cls:'mod single'}],
     [{v:'⌫',k:'backspace',w:1.75,cls:'mod single'},{v:'a',s:'A'},{v:'r',s:'R'},{v:'s',s:'S'},{v:'t',s:'T'},{v:'d',s:'D'},{v:'h',s:'H'},{v:'n',s:'N'},{v:'e',s:'E'},{v:'i',s:'I'},{v:'o',s:'O'},{v:"'",s:'"'},{v:'Enter',k:'enter',w:2.35,cls:'mod single'}],
@@ -708,166 +1080,392 @@ const KBD={
     [{v:'Ctrl',k:'ctrl',w:1.4,cls:'mod single'},{v:'⌘',k:'cmd',w:1.2,cls:'mod single'},{v:'Alt',k:'alt',w:1.2,cls:'mod single'},{v:'',k:'space',w:6.3,cls:'space-key single'},{v:'Alt',k:'alt',w:1.2,cls:'mod single'},{v:'⌘',k:'cmd',w:1.2,cls:'mod single'},{v:'Ctrl',k:'ctrl',w:1.4,cls:'mod single'}]
   ]}
 };
-const STENO={
-  numBar:{v:'#  —  Number Bar  —  #',k:'#',cls:'sk-num single',w:1},
-  topRow:[{v:'S',k:'S-',cls:'sk-l'},{v:'T',k:'T-',cls:'sk-l'},{v:'K',k:'K-',cls:'sk-l'},{v:'P',k:'P-',cls:'sk-l'},{v:'W',k:'W-',cls:'sk-l'},{v:'H',k:'H-',cls:'sk-l'},{v:'✦',k:'*',cls:'sk-star single',w:.8},{v:'F',k:'-F',cls:'sk-r'},{v:'P',k:'-P',cls:'sk-r'},{v:'L',k:'-L',cls:'sk-r'},{v:'T',k:'-T',cls:'sk-r'},{v:'D',k:'-D',cls:'sk-r'}],
-  botRow:[{v:'S',k:'S2-',cls:'sk-l'},{gap:true,w:1},{v:'A',k:'A',cls:'sk-v single'},{v:'O',k:'O',cls:'sk-v single'},{v:'✦',k:'*',cls:'sk-star single',w:.8},{v:'E',k:'E',cls:'sk-v single'},{v:'U',k:'U',cls:'sk-v single'},{gap:true,w:1},{v:'R',k:'-R',cls:'sk-r'},{v:'B',k:'-B',cls:'sk-r'},{v:'G',k:'-G',cls:'sk-r'},{v:'S',k:'-S',cls:'sk-r'},{v:'Z',k:'-Z',cls:'sk-r'}],
-  ctrlRow:[{v:'⌫ Del Word',k:'steno-delete',cls:'mod single',w:1.5},{v:'▶ Commit',k:'steno-submit',cls:'mod single',w:2},{v:'Space',k:'steno-space',cls:'space-key single',w:4},{v:'✕ Clear',k:'steno-clear',cls:'mod single',w:1.5}]
+
+const STENO = {
+  numBar: {v:'#  —  Number Bar  —  #', k:'#', cls:'sk-num single', w:1},
+  topRow: [
+    {v:'S',k:'S-',cls:'sk-l'},{v:'T',k:'T-',cls:'sk-l'},{v:'K',k:'K-',cls:'sk-l'},
+    {v:'P',k:'P-',cls:'sk-l'},{v:'W',k:'W-',cls:'sk-l'},{v:'H',k:'H-',cls:'sk-l'},
+    {v:'✦',k:'*',cls:'sk-star single',w:.8},
+    {v:'F',k:'-F',cls:'sk-r'},{v:'P',k:'-P',cls:'sk-r'},{v:'L',k:'-L',cls:'sk-r'},
+    {v:'T',k:'-T',cls:'sk-r'},{v:'D',k:'-D',cls:'sk-r'}
+  ],
+  botRow: [
+    {v:'S',k:'S2-',cls:'sk-l'},{gap:true,w:1},
+    {v:'A',k:'A',cls:'sk-v single'},{v:'O',k:'O',cls:'sk-v single'},
+    {v:'✦',k:'*',cls:'sk-star single',w:.8},
+    {v:'E',k:'E',cls:'sk-v single'},{v:'U',k:'U',cls:'sk-v single'},
+    {gap:true,w:1},
+    {v:'R',k:'-R',cls:'sk-r'},{v:'B',k:'-B',cls:'sk-r'},{v:'G',k:'-G',cls:'sk-r'},
+    {v:'S',k:'-S',cls:'sk-r'},{v:'Z',k:'-Z',cls:'sk-r'}
+  ],
+  ctrlRow: [
+    {v:'⌫ Del Word', k:'steno-delete',  cls:'mod single', w:1.5},
+    {v:'▶ Commit',   k:'steno-submit',  cls:'mod single', w:2},
+    {v:'Space',      k:'steno-space',   cls:'space-key single', w:4},
+    {v:'✕ Clear',    k:'steno-clear',   cls:'mod single', w:1.5}
+  ]
 };
 
-/* ── STATE ── */
-let curLayout='qwerty',shiftOn=false,capsOn=false,btDevice=null,btChar=null;
-const stenoSet=new Set();
-let timerDuration=60,timerRunning=false,timerInterval=null,timerRemain=60,sessionStart=null,keystrokeCount=0;
+/* ── STATE ──────────────────────────────────────── */
+let curLayout = 'qwerty', shiftOn = false, capsOn = false;
+let btDevice = null, btChar = null;
+const stenoSet = new Set();
+let timerDuration = 60, timerRunning = false, timerInterval = null,
+    timerRemain = 60, sessionStart = null, keystrokeCount = 0;
 
-/* ── KEY BUILDER ── */
-function makeKey(def){
-  if(def.gap){const sp=document.createElement('div');sp.className='k sk-gap';sp.style.setProperty('--kw',def.w||1);return sp}
-  const btn=document.createElement('button');btn.style.setProperty('--kw',def.w||1);
-  const cls=['k'];if(def.cls)def.cls.trim().split(/\s+/).forEach(c=>c&&cls.push(c));btn.className=cls.join(' ');
-  if(def.s&&!def.cls?.includes('single')){const ks=document.createElement('span');ks.className='ks';ks.textContent=def.s;const km=document.createElement('span');km.className='km';km.textContent=def.v;btn.append(ks,km)}
-  else{const km=document.createElement('span');km.className='km';km.textContent=def.v??'';btn.appendChild(km)}
-  btn.dataset.k=def.k!==undefined?def.k:def.v.toLowerCase();if(def.s)btn.dataset.shift=def.s;return btn;
+/* ── KEY BUILDER ────────────────────────────────── */
+function makeKey(def) {
+  if (def.gap) {
+    const sp = document.createElement('div');
+    sp.className = 'k sk-gap';
+    sp.style.setProperty('--kw', def.w || 1);
+    return sp;
+  }
+  const btn = document.createElement('button');
+  btn.style.setProperty('--kw', def.w || 1);
+  const cls = ['k'];
+  if (def.cls) def.cls.trim().split(/\s+/).forEach(c => c && cls.push(c));
+  btn.className = cls.join(' ');
+  if (def.s && !def.cls?.includes('single')) {
+    const ks = document.createElement('span'); ks.className = 'ks'; ks.textContent = def.s;
+    const km = document.createElement('span'); km.className = 'km'; km.textContent = def.v;
+    btn.append(ks, km);
+  } else {
+    const km = document.createElement('span'); km.className = 'km'; km.textContent = def.v ?? '';
+    btn.appendChild(km);
+  }
+  btn.dataset.k = def.k !== undefined ? def.k : def.v.toLowerCase();
+  if (def.s) btn.dataset.shift = def.s;
+  return btn;
 }
-function makeRow(defs,ec){const r=document.createElement('div');r.className='kr'+(ec?' '+ec:'');defs.forEach(d=>r.appendChild(makeKey(d)));return r}
+function makeRow(defs, ec) {
+  const r = document.createElement('div');
+  r.className = 'kr' + (ec ? ' ' + ec : '');
+  defs.forEach(d => r.appendChild(makeKey(d)));
+  return r;
+}
 
-/* ── RENDERERS ── */
-function buildStandardKbd(id){const kb=document.getElementById('keyboard');kb.innerHTML='';kb.className='keyboard';KBD[id].rows.forEach(row=>kb.appendChild(makeRow(row)))}
-function buildSteno(){
-  const kb=document.getElementById('keyboard');kb.innerHTML='';kb.className='keyboard';
-  const nr=document.createElement('div');nr.className='kr';const nb=makeKey({...STENO.numBar});nb.style.flex='1 0 0';nb.dataset.steno='#';nr.appendChild(nb);kb.appendChild(nr);
-  const tr=document.createElement('div');tr.className='kr';STENO.topRow.forEach(d=>{const b=makeKey(d);b.dataset.steno=d.k;tr.appendChild(b)});kb.appendChild(tr);
-  const br=document.createElement('div');br.className='kr steno-bot';STENO.botRow.forEach(d=>{const el=makeKey(d);if(!d.gap)el.dataset.steno=d.k;br.appendChild(el)});kb.appendChild(br);
-  const cr=document.createElement('div');cr.className='kr';STENO.ctrlRow.forEach(d=>{const b=makeKey(d);b.dataset.stenoCtrl=d.k;cr.appendChild(b)});kb.appendChild(cr);
-}
-function buildNumpad(){
-  const kb=document.getElementById('keyboard');kb.innerHTML='';kb.className='keyboard';
-  const w=document.createElement('div');w.className='numpad-wrap';const inn=document.createElement('div');inn.className='numpad-inner';
-  [[{v:'7'},{v:'8'},{v:'9'},{v:'/',s:'÷',cls:'mod single'}],[{v:'4'},{v:'5'},{v:'6'},{v:'×',k:'*',cls:'mod single'}],[{v:'1'},{v:'2'},{v:'3'},{v:'-',cls:'mod single'}],[{v:'0',w:2,cls:'single'},{v:'.'},{v:'+',cls:'mod single'}],[{v:'⌫',k:'backspace',w:1.5,cls:'mod single'},{v:'Enter',k:'enter',w:2.5,cls:'mod single'}]].forEach(row=>inn.appendChild(makeRow(row)));
-  w.appendChild(inn);kb.appendChild(w);
+/* ── RENDERERS ──────────────────────────────────── */
+function buildStandardKbd(id) {
+  const kb = document.getElementById('keyboard');
+  kb.innerHTML = ''; kb.className = 'keyboard';
+  KBD[id].rows.forEach(row => kb.appendChild(makeRow(row)));
 }
 
-/* ── PRESS HANDLER ── */
-function handlePress(btn){
-  if(!btn||btn.disabled||btn.classList.contains('sk-gap'))return;
-  playTone();btn.classList.add('active','glow');setTimeout(()=>btn.classList.remove('active','glow'),280);
-  if(!timerRunning&&timerRemain===timerDuration&&timerRemain>0)startTimer(true);
-  const out=document.getElementById('output'),k=btn.dataset.k;
-  if(btn.dataset.steno&&!btn.dataset.stenoCtrl){const sk=btn.dataset.steno==='S2-'?'S-':btn.dataset.steno;stenoSet.add(sk);renderStenoChord();countKeystroke();return}
-  if(btn.dataset.stenoCtrl){
-    if(k==='steno-submit'&&stenoSet.size){const chord=[...stenoSet].join('+');out.value+=`[${chord}] `;btSend(`[${chord}] `);stenoSet.clear();renderStenoChord();updateCounts()}
-    else if(k==='steno-delete'){const parts=out.value.trimEnd().split(' ');parts.pop();out.value=parts.length?parts.join(' ')+' ':'';stenoSet.clear();renderStenoChord();updateCounts()}
-    else if(k==='steno-space'){out.value+=' ';updateCounts()}
-    else if(k==='steno-clear'){stenoSet.clear();renderStenoChord()}
+function buildSteno() {
+  const kb = document.getElementById('keyboard');
+  kb.innerHTML = ''; kb.className = 'keyboard';
+  const nr = document.createElement('div'); nr.className = 'kr';
+  const nb = makeKey({...STENO.numBar}); nb.style.flex = '1 0 0'; nb.dataset.steno = '#';
+  nr.appendChild(nb); kb.appendChild(nr);
+  const tr = document.createElement('div'); tr.className = 'kr';
+  STENO.topRow.forEach(d => { const b = makeKey(d); b.dataset.steno = d.k; tr.appendChild(b); });
+  kb.appendChild(tr);
+  const br = document.createElement('div'); br.className = 'kr steno-bot';
+  STENO.botRow.forEach(d => { const el = makeKey(d); if (!d.gap) el.dataset.steno = d.k; br.appendChild(el); });
+  kb.appendChild(br);
+  const cr = document.createElement('div'); cr.className = 'kr';
+  STENO.ctrlRow.forEach(d => { const b = makeKey(d); b.dataset.stenoCtrl = d.k; cr.appendChild(b); });
+  kb.appendChild(cr);
+}
+
+function buildNumpad() {
+  const kb = document.getElementById('keyboard');
+  kb.innerHTML = ''; kb.className = 'keyboard';
+  const w = document.createElement('div'); w.className = 'numpad-wrap';
+  const inn = document.createElement('div'); inn.className = 'numpad-inner';
+  [
+    [{v:'7'},{v:'8'},{v:'9'},{v:'/',s:'÷',cls:'mod single'}],
+    [{v:'4'},{v:'5'},{v:'6'},{v:'×',k:'*',cls:'mod single'}],
+    [{v:'1'},{v:'2'},{v:'3'},{v:'-',cls:'mod single'}],
+    [{v:'0',w:2,cls:'single'},{v:'.'},{v:'+',cls:'mod single'}],
+    [{v:'⌫',k:'backspace',w:1.5,cls:'mod single'},{v:'Enter',k:'enter',w:2.5,cls:'mod single'}]
+  ].forEach(row => inn.appendChild(makeRow(row)));
+  w.appendChild(inn); kb.appendChild(w);
+}
+
+/* ── PRESS HANDLER ──────────────────────────────── */
+function handlePress(btn) {
+  if (!btn || btn.disabled || btn.classList.contains('sk-gap')) return;
+  playTone();
+  btn.classList.add('active', 'glow');
+  setTimeout(() => btn.classList.remove('active', 'glow'), 220);
+  if (!timerRunning && timerRemain === timerDuration && timerRemain > 0) startTimer(true);
+
+  const out = document.getElementById('output');
+  const k = btn.dataset.k;
+
+  // steno
+  if (btn.dataset.steno && !btn.dataset.stenoCtrl) {
+    const sk = btn.dataset.steno === 'S2-' ? 'S-' : btn.dataset.steno;
+    stenoSet.add(sk); renderStenoChord(); countKeystroke(); return;
+  }
+  if (btn.dataset.stenoCtrl) {
+    if (k === 'steno-submit' && stenoSet.size) {
+      const chord = [...stenoSet].join('+');
+      out.value += `[${chord}] `; btSend(`[${chord}] `);
+      stenoSet.clear(); renderStenoChord(); updateCounts();
+    } else if (k === 'steno-delete') {
+      const parts = out.value.trimEnd().split(' '); parts.pop();
+      out.value = parts.length ? parts.join(' ') + ' ' : '';
+      stenoSet.clear(); renderStenoChord(); updateCounts();
+    } else if (k === 'steno-space') { out.value += ' '; updateCounts(); }
+    else if (k === 'steno-clear')   { stenoSet.clear(); renderStenoChord(); }
     return;
   }
-  if(k==='backspace'){out.value=out.value.slice(0,-1)}
-  else if(k==='enter'){out.value+='\n';btSend('\n')}
-  else if(k==='tab'){out.value+='\t'}
-  else if(k==='space'){out.value+=' ';btSend(' ')}
-  else if(k==='caps'){capsOn=!capsOn;document.getElementById('dotCaps').classList.toggle('on',capsOn);return}
-  else if(k==='shift'){setShift(!shiftOn);return}
-  else if(['ctrl','alt','cmd'].includes(k)){return}
-  else if(k.length===1||k==='*'||k==='+'||k==='-'){
+
+  if      (k === 'backspace') { out.value = out.value.slice(0, -1); }
+  else if (k === 'enter')     { out.value += '\n'; btSend('\n'); }
+  else if (k === 'tab')       { out.value += '\t'; }
+  else if (k === 'space')     { out.value += ' '; btSend(' '); }
+  else if (k === 'caps')      { capsOn = !capsOn; document.getElementById('dotCaps').classList.toggle('on', capsOn); return; }
+  else if (k === 'shift')     { setShift(!shiftOn); return; }
+  else if (['ctrl','alt','cmd'].includes(k)) { return; }
+  else if (k.length === 1 || ['*','+','-'].includes(k)) {
     let ch;
-    if(shiftOn&&btn.dataset.shift)ch=btn.dataset.shift;
-    else if(shiftOn&&/^[a-z]$/.test(k))ch=k.toUpperCase();
-    else if(!shiftOn&&capsOn&&/^[a-z]$/.test(k))ch=k.toUpperCase();
-    else ch=k;
-    out.value+=ch;btSend(ch);if(shiftOn)setShift(false);
+    if      (shiftOn && btn.dataset.shift)     ch = btn.dataset.shift;
+    else if (shiftOn && /^[a-z]$/.test(k))     ch = k.toUpperCase();
+    else if (!shiftOn && capsOn && /^[a-z]$/.test(k)) ch = k.toUpperCase();
+    else ch = k;
+    out.value += ch; btSend(ch);
+    if (shiftOn) setShift(false);
   }
-  countKeystroke();updateCounts();
+  countKeystroke(); updateCounts();
 }
 
-/* ── TIMER ── */
-function startTimer(auto){
-  if(timerRunning)return;if(timerRemain<=0)timerRemain=timerDuration;
-  timerRunning=true;sessionStart=Date.now();
-  document.getElementById('timerStartBtn').textContent='⏸ Pause';
+/* ── TIMER ──────────────────────────────────────── */
+function startTimer(auto) {
+  if (timerRunning) return;
+  if (timerRemain <= 0) timerRemain = timerDuration;
+  timerRunning = true; sessionStart = Date.now();
+  document.getElementById('timerStartBtn').textContent = '⏸ Pause';
   document.getElementById('dotTimer').classList.add('on');
-  document.getElementById('lblTimer').textContent='Timer: Running';
-  timerInterval=setInterval(()=>{timerRemain--;updateTimerDisplay();updateLiveStats();if(timerRemain<=0){clearInterval(timerInterval);timerRunning=false;timerRemain=0;updateTimerDisplay();showScoreModal()}},1000);
+  document.getElementById('lblTimer').textContent = 'Timer: Running';
+  timerInterval = setInterval(() => {
+    timerRemain--;
+    updateTimerDisplay(); updateLiveStats();
+    if (timerRemain <= 0) {
+      clearInterval(timerInterval); timerRunning = false; timerRemain = 0;
+      updateTimerDisplay(); showScoreModal();
+    }
+  }, 1000);
 }
-function pauseTimer(){clearInterval(timerInterval);timerRunning=false;document.getElementById('timerStartBtn').textContent='▶ Resume';document.getElementById('dotTimer').classList.remove('on');document.getElementById('lblTimer').textContent='Timer: Paused'}
-function resetTimer(){clearInterval(timerInterval);timerRunning=false;timerRemain=timerDuration;keystrokeCount=0;sessionStart=null;updateTimerDisplay();updateLiveStats();document.getElementById('timerStartBtn').textContent='▶ Start';document.getElementById('dotTimer').classList.remove('on');document.getElementById('lblTimer').textContent='Timer: Ready'}
-function updateTimerDisplay(){const el=document.getElementById('timerDisplay'),m=Math.floor(timerRemain/60),s=timerRemain%60;el.textContent=`${m}:${s.toString().padStart(2,'0')}`;el.classList.toggle('warn',timerRemain<=10&&timerRemain>0)}
-function countKeystroke(){keystrokeCount++}
-function calcStats(){const out=document.getElementById('output').value,chars=out.length,words=out.trim()?out.trim().split(/\s+/).filter(Boolean).length:0,elapsed=sessionStart?Math.max(1,(Date.now()-sessionStart)/1000):1,wpm=(timerRunning||sessionStart)?Math.round(words/(elapsed/60)):0,kps=sessionStart?(keystrokeCount/elapsed).toFixed(1):'0.0';return{chars,words,wpm,kps,elapsed,keystrokes:keystrokeCount}}
-function updateCounts(){const s=calcStats();document.getElementById('charCount').textContent=`${s.chars} chars`;document.getElementById('statChars').textContent=s.chars;document.getElementById('statWords').textContent=s.words;document.getElementById('statKeys').textContent=s.keystrokes;if(timerRunning){document.getElementById('statWpm').textContent=s.wpm;document.getElementById('wpmLive').textContent=`${s.wpm} WPM`}}
-function updateLiveStats(){updateCounts()}
-function showScoreModal(){
-  const s=calcStats();
-  let grade,msg;
-  if(s.wpm>=80){grade='S';msg='Exceptional speed! Professional-level typing.'}
-  else if(s.wpm>=60){grade='A';msg="Excellent! You're faster than 90% of typists."}
-  else if(s.wpm>=45){grade='B';msg='Great speed. Above average with room to grow.'}
-  else if(s.wpm>=30){grade='C';msg='Solid typing. Keep practicing for better flow.'}
-  else if(s.wpm>=15){grade='D';msg='Getting there! Focus on accuracy and rhythm.'}
-  else{grade='F';msg='Just starting out — every keystroke counts!'}
-  document.getElementById('scoreGrade').textContent=grade;
-  document.getElementById('scoreGrade').style.color=['S','A'].includes(grade)?'var(--accent)':grade==='B'?'var(--accent3)':grade==='C'?'var(--text)':'var(--danger)';
-  document.getElementById('scoreMsg').textContent=msg;
-  document.getElementById('sc-wpm').textContent=s.wpm;document.getElementById('sc-chars').textContent=s.chars;document.getElementById('sc-words').textContent=s.words;document.getElementById('sc-keys').textContent=s.keystrokes;document.getElementById('sc-kps').textContent=s.kps;
-  setTimeout(()=>{document.getElementById('sc-bar').style.width=Math.min(100,(s.wpm/120)*100)+'%'},100);
-  document.getElementById('scoreOverlay').classList.add('open');document.getElementById('dotTimer').classList.remove('on');document.getElementById('lblTimer').textContent='Timer: Done';
+function pauseTimer() {
+  clearInterval(timerInterval); timerRunning = false;
+  document.getElementById('timerStartBtn').textContent = '▶ Resume';
+  document.getElementById('dotTimer').classList.remove('on');
+  document.getElementById('lblTimer').textContent = 'Timer: Paused';
+}
+function resetTimer() {
+  clearInterval(timerInterval); timerRunning = false;
+  timerRemain = timerDuration; keystrokeCount = 0; sessionStart = null;
+  updateTimerDisplay(); updateLiveStats();
+  document.getElementById('timerStartBtn').textContent = '▶ Start';
+  document.getElementById('dotTimer').classList.remove('on');
+  document.getElementById('lblTimer').textContent = 'Timer: Ready';
+}
+function updateTimerDisplay() {
+  const el = document.getElementById('timerDisplay');
+  const m = Math.floor(timerRemain / 60), s = timerRemain % 60;
+  el.textContent = `${m}:${s.toString().padStart(2,'0')}`;
+  el.classList.toggle('warn', timerRemain <= 10 && timerRemain > 0);
+}
+function countKeystroke() { keystrokeCount++; }
+function calcStats() {
+  const out   = document.getElementById('output').value;
+  const chars = out.length;
+  const words = out.trim() ? out.trim().split(/\s+/).filter(Boolean).length : 0;
+  const elapsed = sessionStart ? Math.max(1, (Date.now() - sessionStart) / 1000) : 1;
+  const wpm = (timerRunning || sessionStart) ? Math.round(words / (elapsed / 60)) : 0;
+  const kps = sessionStart ? (keystrokeCount / elapsed).toFixed(1) : '0.0';
+  return {chars, words, wpm, kps, elapsed, keystrokes: keystrokeCount};
+}
+function updateCounts() {
+  const s = calcStats();
+  document.getElementById('charCount').textContent = `${s.chars} chars`;
+  document.getElementById('statChars').textContent  = s.chars;
+  document.getElementById('statWords').textContent  = s.words;
+  document.getElementById('statKeys').textContent   = s.keystrokes;
+  if (timerRunning) {
+    document.getElementById('statWpm').textContent  = s.wpm;
+    document.getElementById('wpmLive').textContent  = `${s.wpm} WPM`;
+  }
+}
+function updateLiveStats() { updateCounts(); }
+
+function showScoreModal() {
+  const s = calcStats();
+  let grade, msg;
+  if      (s.wpm >= 80) { grade = 'S'; msg = 'Exceptional speed! Professional-level typing.'; }
+  else if (s.wpm >= 60) { grade = 'A'; msg = "Excellent! You're faster than 90% of typists."; }
+  else if (s.wpm >= 45) { grade = 'B'; msg = 'Great speed. Above average with room to grow.'; }
+  else if (s.wpm >= 30) { grade = 'C'; msg = 'Solid typing. Keep practicing for better flow.'; }
+  else if (s.wpm >= 15) { grade = 'D'; msg = 'Getting there! Focus on accuracy and rhythm.'; }
+  else                  { grade = 'F'; msg = 'Just starting out — every keystroke counts!'; }
+
+  const gradeEl = document.getElementById('scoreGrade');
+  gradeEl.textContent = grade;
+  gradeEl.style.color = ['S','A'].includes(grade) ? 'var(--accent)'
+    : grade === 'B' ? 'var(--accent-2)' : grade === 'C' ? 'var(--text)' : 'var(--danger)';
+  document.getElementById('scoreMsg').textContent    = msg;
+  document.getElementById('sc-wpm').textContent      = s.wpm;
+  document.getElementById('sc-chars').textContent    = s.chars;
+  document.getElementById('sc-words').textContent    = s.words;
+  document.getElementById('sc-keys').textContent     = s.keystrokes;
+  document.getElementById('sc-kps').textContent      = s.kps;
+  setTimeout(() => {
+    document.getElementById('sc-bar').style.width = Math.min(100, (s.wpm / 120) * 100) + '%';
+  }, 120);
+  document.getElementById('scoreOverlay').classList.add('open');
+  document.getElementById('dotTimer').classList.remove('on');
+  document.getElementById('lblTimer').textContent = 'Timer: Done';
 }
 
-/* ── HELPERS ── */
-function setShift(on){shiftOn=on;document.getElementById('dotShift').classList.toggle('on',on);['shiftBtn','drawerShiftBtn'].forEach(id=>document.getElementById(id)?.classList.toggle('active',on));document.getElementById('lblShift').textContent=on?'Shift ●':'Shift'}
-function renderStenoChord(){const el=document.getElementById('stenoChord');if(stenoSet.size){el.style.display='block';el.textContent=[...stenoSet].join(' + ')}else{el.style.display='none';el.textContent=''}}
-function setLayout(id){
-  curLayout=id;document.querySelectorAll('.ltab').forEach(t=>t.classList.toggle('active',t.dataset.layout===id));
-  const name=KBD[id]?.name||'Stenography';document.getElementById('lblLayout').textContent=name;
-  document.getElementById('stenoChord').style.display='none';stenoSet.clear();
-  if(id==='steno')buildSteno();else if(id==='numpad')buildNumpad();else buildStandardKbd(id);
+/* ── HELPERS ────────────────────────────────────── */
+function setShift(on) {
+  shiftOn = on;
+  document.getElementById('dotShift').classList.toggle('on', on);
+  document.getElementById('shiftBtn').classList.toggle('active', on);
+  document.getElementById('drawerShiftBtn')?.classList.toggle('active', on);
+  document.getElementById('lblShift').textContent = on ? 'Shift ●' : 'Shift';
+}
+function renderStenoChord() {
+  const el = document.getElementById('stenoChord');
+  if (stenoSet.size) { el.style.display = 'block'; el.textContent = [...stenoSet].join(' + '); }
+  else               { el.style.display = 'none';  el.textContent = ''; }
+}
+function setLayout(id) {
+  curLayout = id;
+  document.querySelectorAll('.ltab').forEach(t => t.classList.toggle('active', t.dataset.layout === id));
+  const name = KBD[id]?.name || (id === 'steno' ? 'Stenography' : 'Numpad');
+  document.getElementById('lblLayout').textContent = name;
+  document.getElementById('stenoChord').style.display = 'none';
+  stenoSet.clear();
+  if      (id === 'steno')  buildSteno();
+  else if (id === 'numpad') buildNumpad();
+  else buildStandardKbd(id);
 }
 
-/* ── BLUETOOTH ── */
-async function connectBT(){
-  if(!navigator.bluetooth){alert('Web Bluetooth requires Chrome or Edge.');return}
-  try{btDevice=await navigator.bluetooth.requestDevice({acceptAllDevices:true,optionalServices:['human_interface_device']});btDevice.addEventListener('gattserverdisconnected',()=>{btDevice=btChar=null;setBTStatus(false)});const server=await btDevice.gatt.connect();setBTStatus(true,btDevice.name);try{const svc=await server.getPrimaryService('human_interface_device'),chars=await svc.getCharacteristics();btChar=chars.find(c=>c.properties.writeWithoutResponse||c.properties.write)||null}catch(e){console.info('HID:',e.message)}}catch(e){if(e.name!=='NotFoundError')console.error(e)}
+/* ── BLUETOOTH ──────────────────────────────────── */
+async function connectBT() {
+  if (!navigator.bluetooth) { alert('Web Bluetooth requires Chrome or Edge.'); return; }
+  try {
+    btDevice = await navigator.bluetooth.requestDevice({
+      acceptAllDevices: true,
+      optionalServices: ['human_interface_device']
+    });
+    btDevice.addEventListener('gattserverdisconnected', () => {
+      btDevice = btChar = null; setBTStatus(false);
+    });
+    const server = await btDevice.gatt.connect();
+    setBTStatus(true, btDevice.name);
+    try {
+      const svc  = await server.getPrimaryService('human_interface_device');
+      const chars = await svc.getCharacteristics();
+      btChar = chars.find(c => c.properties.writeWithoutResponse || c.properties.write) || null;
+    } catch(e) { console.info('HID:', e.message); }
+  } catch(e) { if (e.name !== 'NotFoundError') console.error(e); }
 }
-async function btSend(text){if(!btChar)return;try{await btChar.writeValue(new TextEncoder().encode(text))}catch(e){console.warn('BT:',e.message)}}
-function setBTStatus(on,name=''){['btDot','dotBT2'].forEach(id=>document.getElementById(id).classList.toggle('on',on));document.getElementById('lblBT').textContent=on?`BT: ${name||'Connected'}`:'Bluetooth: Off'}
+async function btSend(text) {
+  if (!btChar) return;
+  try { await btChar.writeValue(new TextEncoder().encode(text)); }
+  catch(e) { console.warn('BT:', e.message); }
+}
+function setBTStatus(on, name = '') {
+  ['btDot','dotBT2'].forEach(id => document.getElementById(id).classList.toggle('on', on));
+  document.getElementById('lblBT').textContent = on ? `BT: ${name || 'Connected'}` : 'Bluetooth: Off';
+}
 
-/* ── DRAWER ── */
-function openDrawer(){buildThemeCards();document.getElementById('mobileDrawer').classList.add('open')}
-function closeDrawer(){document.getElementById('mobileDrawer').classList.remove('open')}
-document.getElementById('menuToggle').addEventListener('click',openDrawer);
-document.getElementById('drawerClose').addEventListener('click',closeDrawer);
-document.getElementById('drawerBackdrop').addEventListener('click',closeDrawer);
-document.getElementById('drawerShiftBtn').addEventListener('click',()=>{setShift(!shiftOn);closeDrawer()});
-document.getElementById('drawerCopyBtn').addEventListener('click',()=>{navigator.clipboard.writeText(document.getElementById('output').value).then(()=>{const b=document.getElementById('drawerCopyBtn');b.textContent='✓ Copied!';setTimeout(()=>b.textContent='⧉ Copy Output',1600)})});
-document.getElementById('drawerBtBtn').addEventListener('click',()=>{closeDrawer();document.getElementById('btOverlay').classList.add('open')});
-document.getElementById('drawerClearBtn').addEventListener('click',()=>{document.getElementById('output').value='';updateCounts();stenoSet.clear();renderStenoChord();closeDrawer()});
-
-/* ── EVENT WIRING ── */
-const kb=document.getElementById('keyboard');
-kb.addEventListener('click',e=>{const b=e.target.closest('.k');if(b)handlePress(b)});
-kb.addEventListener('touchstart',e=>{const b=e.target.closest('.k');if(b){e.preventDefault();handlePress(b)}},{passive:false});
-document.querySelectorAll('.ltab').forEach(t=>t.addEventListener('click',()=>setLayout(t.dataset.layout)));
-document.getElementById('shiftBtn').addEventListener('click',()=>setShift(!shiftOn));
-document.getElementById('clearBtn').addEventListener('click',()=>{document.getElementById('output').value='';updateCounts();stenoSet.clear();renderStenoChord()});
-document.getElementById('copyBtn').addEventListener('click',()=>{navigator.clipboard.writeText(document.getElementById('output').value).then(()=>{const b=document.getElementById('copyBtn');b.textContent='Copied!';setTimeout(()=>b.textContent='Copy',1600)})});
-document.getElementById('btBtn').addEventListener('click',()=>document.getElementById('btOverlay').classList.add('open'));
-document.getElementById('btClose').addEventListener('click',()=>document.getElementById('btOverlay').classList.remove('open'));
-document.getElementById('btConnect').addEventListener('click',()=>{document.getElementById('btOverlay').classList.remove('open');connectBT()});
-document.getElementById('timerStartBtn').addEventListener('click',()=>{if(timerRunning)pauseTimer();else startTimer(false)});
-document.getElementById('timerResetBtn').addEventListener('click',resetTimer);
-document.querySelectorAll('[data-dur]').forEach(btn=>{btn.addEventListener('click',()=>{if(timerRunning)return;timerDuration=+btn.dataset.dur;timerRemain=timerDuration;updateTimerDisplay();document.querySelectorAll('[data-dur]').forEach(b=>b.classList.remove('active'));btn.classList.add('active')})});
-document.getElementById('scoreClose').addEventListener('click',()=>{document.getElementById('scoreOverlay').classList.remove('open');resetTimer();document.getElementById('output').value='';updateCounts()});
-document.getElementById('scoreCopy').addEventListener('click',()=>{const s=calcStats();navigator.clipboard.writeText(`KeyFlow Session Report\nWPM: ${s.wpm}\nChars: ${s.chars}\nWords: ${s.words}\nKeystrokes: ${s.keystrokes}\nKeys/sec: ${s.kps}`)});
-document.querySelectorAll('.theme-swatch').forEach(sw=>sw.addEventListener('click',()=>applyTheme(sw.dataset.t)));
-document.addEventListener('keydown',e=>{
-  if(document.activeElement===document.getElementById('output'))return;
-  const map={' ':'space','Enter':'enter','Backspace':'backspace','Tab':'tab','CapsLock':'caps','Shift':'shift'};
-  const k=map[e.key]||e.key.toLowerCase();
-  const btn=document.querySelector(`.k[data-k="${CSS.escape(k)}"]`);
-  if(btn){handlePress(btn);e.preventDefault()}
+/* ── DRAWER ─────────────────────────────────────── */
+function openDrawer()  {
+  buildThemeCards();
+  document.getElementById('mobileDrawer').classList.add('open');
+  document.getElementById('drawerBackdrop').classList.add('open');
+}
+function closeDrawer() {
+  document.getElementById('mobileDrawer').classList.remove('open');
+  document.getElementById('drawerBackdrop').classList.remove('open');
+}
+document.getElementById('menuToggle').addEventListener('click', openDrawer);
+document.getElementById('drawerClose').addEventListener('click', closeDrawer);
+document.getElementById('drawerBackdrop').addEventListener('click', closeDrawer);
+document.getElementById('drawerShiftBtn').addEventListener('click', () => { setShift(!shiftOn); closeDrawer(); });
+document.getElementById('drawerCopyBtn').addEventListener('click', () => {
+  navigator.clipboard.writeText(document.getElementById('output').value).then(() => {
+    const b = document.getElementById('drawerCopyBtn');
+    b.textContent = '✓ Copied!'; setTimeout(() => b.textContent = '⧉ Copy Output', 1600);
+  });
 });
-document.getElementById('output').addEventListener('input',updateCounts);
+document.getElementById('drawerBtBtn').addEventListener('click', () => {
+  closeDrawer(); document.getElementById('btOverlay').classList.add('open');
+});
+document.getElementById('drawerClearBtn').addEventListener('click', () => {
+  document.getElementById('output').value = ''; updateCounts();
+  stenoSet.clear(); renderStenoChord(); closeDrawer();
+});
 
-/* ── INIT ── */
+/* ── CORE EVENT WIRING ──────────────────────────── */
+const kb = document.getElementById('keyboard');
+kb.addEventListener('click', e => { const b = e.target.closest('.k'); if (b) handlePress(b); });
+kb.addEventListener('touchstart', e => {
+  const b = e.target.closest('.k');
+  if (b) { e.preventDefault(); handlePress(b); }
+}, {passive: false});
+
+document.querySelectorAll('.ltab').forEach(t => t.addEventListener('click', () => setLayout(t.dataset.layout)));
+document.getElementById('shiftBtn').addEventListener('click', () => setShift(!shiftOn));
+document.getElementById('clearBtn').addEventListener('click', () => {
+  document.getElementById('output').value = ''; updateCounts(); stenoSet.clear(); renderStenoChord();
+});
+document.getElementById('copyBtn').addEventListener('click', () => {
+  navigator.clipboard.writeText(document.getElementById('output').value).then(() => {
+    const b = document.getElementById('copyBtn');
+    b.textContent = '✓ Copied'; setTimeout(() => b.textContent = 'Copy', 1600);
+  });
+});
+document.getElementById('btBtn').addEventListener('click', () => document.getElementById('btOverlay').classList.add('open'));
+document.getElementById('btClose').addEventListener('click', () => document.getElementById('btOverlay').classList.remove('open'));
+document.getElementById('btConnect').addEventListener('click', () => {
+  document.getElementById('btOverlay').classList.remove('open'); connectBT();
+});
+
+document.getElementById('timerStartBtn').addEventListener('click', () => { if (timerRunning) pauseTimer(); else startTimer(false); });
+document.getElementById('timerResetBtn').addEventListener('click', resetTimer);
+document.querySelectorAll('[data-dur]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (timerRunning) return;
+    timerDuration = +btn.dataset.dur; timerRemain = timerDuration; updateTimerDisplay();
+    document.querySelectorAll('[data-dur]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+
+document.getElementById('scoreClose').addEventListener('click', () => {
+  document.getElementById('scoreOverlay').classList.remove('open');
+  resetTimer(); document.getElementById('output').value = ''; updateCounts();
+});
+document.getElementById('scoreCopy').addEventListener('click', () => {
+  const s = calcStats();
+  navigator.clipboard.writeText(
+    `KeyFlow Session Report\nWPM: ${s.wpm}\nChars: ${s.chars}\nWords: ${s.words}\nKeystrokes: ${s.keystrokes}\nKeys/sec: ${s.kps}`
+  );
+});
+
+document.querySelectorAll('.theme-swatch').forEach(sw => sw.addEventListener('click', () => applyTheme(sw.dataset.t)));
+
+// Physical keyboard passthrough
+document.addEventListener('keydown', e => {
+  if (document.activeElement === document.getElementById('output')) return;
+  const map = {' ':'space','Enter':'enter','Backspace':'backspace','Tab':'tab','CapsLock':'caps','Shift':'shift'};
+  const k = map[e.key] || e.key.toLowerCase();
+  const btn = document.querySelector(`.k[data-k="${CSS.escape(k)}"]`);
+  if (btn) { handlePress(btn); e.preventDefault(); }
+});
+document.getElementById('output').addEventListener('input', updateCounts);
+
+/* ── INIT ───────────────────────────────────────── */
+applyTheme('midnight');
 updateTimerDisplay();
 setLayout('qwerty');
 buildThemeCards();
