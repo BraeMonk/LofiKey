@@ -4,295 +4,618 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>KeyFlow — Multi-Layout Keyboard</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+<title>KeyFlow</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-/* ── Reset & Tokens ─────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-–bg:          #0d0f14;
-–surface:     #161922;
-–surface2:    #1e2230;
-–border:      #2a2f42;
-–accent:      #7eb8f7;
-–accent2:     #b8a9f7;
-–accent3:     #7ef7c4;
-–danger:      #f77e7e;
-–text:        #e8eaf2;
-–muted:       #7a7f99;
-–key-bg:      #1e2230;
-–key-hover:   #2a3050;
-–key-press:   #323b5a;
-–key-shadow:  0 3px 0 #080a0f, 0 4px 10px rgba(0,0,0,0.55);
-–key-shadow-p:0 1px 0 #080a0f;
-–glow:        rgba(126,184,247,0.18);
-
-/* fluid key sizing — scales with viewport width */
-–kb-gap:      clamp(3px, 0.45vw, 6px);
-–key-h:       clamp(36px, 5.5vw, 52px);
-–key-fs:      clamp(9px, 1.1vw, 13px);
-–key-fs-sub:  clamp(7px, 0.85vw, 10px);
-–key-r:       clamp(4px, 0.6vw, 8px);
+/* ═══════════════════════════════════════════════════════
+   THEMES
+═══════════════════════════════════════════════════════ */
+:root, [data-theme="midnight"] {
+  --bg:          #10121a;
+  --bg2:         #181c28;
+  --panel:       #1e2235;
+  --panel2:      #252a3d;
+  --border:      #313654;
+  --border2:     #404870;
+  --text:        #e2e6f5;
+  --text2:       #8b92b5;
+  --text3:       #565d82;
+  --accent:      #5e9ff2;
+  --accent2:     #9b87f5;
+  --accent3:     #4ecfa0;
+  --danger:      #f07070;
+  /* Key caps */
+  --key-face:    #252a3d;
+  --key-side:    #161929;
+  --key-border:  #363d5e;
+  --key-text:    #c8ceea;
+  --key-text2:   #6b74a0;
+  --key-hover:   #2e344f;
+  --key-active:  #1a1e2d;
+  --key-accent:  #2a3060;
+  --key-shadow:  0 4px 0 var(--key-side), 0 5px 12px rgba(0,0,0,0.55);
+  --key-pressed: 0 1px 0 var(--key-side);
+  --glow-color:  rgba(94,159,242,0.25);
 }
 
-/* ── Layout shell ───────────────────────────────── */
-html, body { height: 100%; }
+[data-theme=“slate”] {
+–bg:          #f0f2f5;
+–bg2:         #e6e9ef;
+–panel:       #ffffff;
+–panel2:      #f5f6fa;
+–border:      #d0d5e2;
+–border2:     #b0b8cc;
+–text:        #1a1d2e;
+–text2:       #6b7394;
+–text3:       #9ba3be;
+–accent:      #3b6fd4;
+–accent2:     #7c5fdb;
+–accent3:     #1aab76;
+–danger:      #e05050;
+–key-face:    #ffffff;
+–key-side:    #c0c8da;
+–key-border:  #d5dae8;
+–key-text:    #2a2f45;
+–key-text2:   #8b93b0;
+–key-hover:   #f0f3fc;
+–key-active:  #e8ecf8;
+–key-accent:  #e8edf8;
+–key-shadow:  0 3px 0 var(–key-side), 0 4px 10px rgba(0,0,0,0.12);
+–key-pressed: 0 1px 0 var(–key-side);
+–glow-color:  rgba(59,111,212,0.2);
+}
+
+[data-theme=“ember”] {
+–bg:          #12100e;
+–bg2:         #1a1714;
+–panel:       #211e1a;
+–panel2:      #2a2620;
+–border:      #3d3628;
+–border2:     #554e38;
+–text:        #f0e8d8;
+–text2:       #9a8c72;
+–text3:       #5e5440;
+–accent:      #e89040;
+–accent2:     #e05850;
+–accent3:     #70c878;
+–danger:      #e05050;
+–key-face:    #2a2620;
+–key-side:    #141210;
+–key-border:  #3d3628;
+–key-text:    #e0d4bc;
+–key-text2:   #7a6e58;
+–key-hover:   #342e26;
+–key-active:  #1e1c18;
+–key-accent:  #3a3020;
+–key-shadow:  0 4px 0 var(–key-side), 0 5px 14px rgba(0,0,0,0.6);
+–key-pressed: 0 1px 0 var(–key-side);
+–glow-color:  rgba(232,144,64,0.25);
+}
+
+[data-theme=“arctic”] {
+–bg:          #f8fbff;
+–bg2:         #eef4fc;
+–panel:       #ffffff;
+–panel2:      #f2f7fe;
+–border:      #c8d8ee;
+–border2:     #a8c0e0;
+–text:        #1c2840;
+–text2:       #5a7298;
+–text3:       #92aac4;
+–accent:      #0077cc;
+–accent2:     #5544cc;
+–accent3:     #009977;
+–danger:      #cc4444;
+–key-face:    #ffffff;
+–key-side:    #a8bcd4;
+–key-border:  #c0d4ec;
+–key-text:    #1c2840;
+–key-text2:   #6888aa;
+–key-hover:   #f0f6ff;
+–key-active:  #e4effc;
+–key-accent:  #e0eeff;
+–key-shadow:  0 3px 0 var(–key-side), 0 4px 12px rgba(0,60,120,0.14);
+–key-pressed: 0 1px 0 var(–key-side);
+–glow-color:  rgba(0,119,204,0.2);
+}
+
+[data-theme=“noir”] {
+–bg:          #050506;
+–bg2:         #0d0d0f;
+–panel:       #111114;
+–panel2:      #18181c;
+–border:      #252528;
+–border2:     #333338;
+–text:        #e8e8ec;
+–text2:       #707078;
+–text3:       #404048;
+–accent:      #c0c0cc;
+–accent2:     #888898;
+–accent3:     #60e0a0;
+–danger:      #e04040;
+–key-face:    #1a1a1e;
+–key-side:    #040405;
+–key-border:  #2a2a30;
+–key-text:    #d0d0d8;
+–key-text2:   #505058;
+–key-hover:   #222228;
+–key-active:  #0e0e12;
+–key-accent:  #202028;
+–key-shadow:  0 4px 0 var(–key-side), 0 6px 16px rgba(0,0,0,0.8);
+–key-pressed: 0 1px 0 var(–key-side);
+–glow-color:  rgba(192,192,204,0.15);
+}
+
+/* ═══════════════════════════════════════════════════════
+RESET & BASE
+═══════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 16px; }
 body {
 background: var(–bg);
 color: var(–text);
-font-family: ‘DM Mono’, monospace;
+font-family: ‘IBM Plex Mono’, monospace;
+min-height: 100dvh;
 display: flex;
 flex-direction: column;
 overflow-x: hidden;
-min-height: 100dvh;
+transition: background 0.3s, color 0.3s;
 }
 
-/* grain overlay */
-body::after {
-content: ‘’;
-position: fixed; inset: 0;
-background-image: url(“data:image/svg+xml,%3Csvg viewBox=‘0 0 200 200’ xmlns=‘http://www.w3.org/2000/svg’%3E%3Cfilter id=‘n’%3E%3CfeTurbulence type=‘fractalNoise’ baseFrequency=‘0.85’ numOctaves=‘4’ stitchTiles=‘stitch’/%3E%3C/filter%3E%3Crect width=‘100%25’ height=‘100%25’ filter=‘url(%23n)’ opacity=‘0.04’/%3E%3C/svg%3E”);
-pointer-events: none; z-index: 9999; opacity: 0.45;
-}
-
-/* ── Header ─────────────────────────────────────── */
-header {
-padding: clamp(0.6rem,1.5vw,1.2rem) clamp(0.75rem,2vw,2rem);
-display: flex; align-items: center; justify-content: space-between;
+/* ═══════════════════════════════════════════════════════
+HEADER
+═══════════════════════════════════════════════════════ */
+.app-header {
+background: var(–panel);
 border-bottom: 1px solid var(–border);
-background: var(–surface);
+padding: 0 1.5rem;
+display: flex;
+align-items: center;
+justify-content: space-between;
+height: 56px;
 flex-shrink: 0;
-gap: 0.5rem;
-flex-wrap: wrap;
+gap: 1rem;
 }
+
 .logo {
-font-family: ‘Playfair Display’, serif;
-font-size: clamp(1rem, 2.5vw, 1.4rem);
-background: linear-gradient(135deg, var(–accent), var(–accent2));
--webkit-background-clip: text; -webkit-text-fill-color: transparent;
+font-family: ‘Syne’, sans-serif;
+font-weight: 800;
+font-size: 1.25rem;
+color: var(–accent);
+letter-spacing: -0.02em;
 white-space: nowrap;
 }
+.logo span { color: var(–text); }
+
+.header-center {
+display: flex; align-items: center; gap: 0.5rem; flex: 1; justify-content: center;
+overflow-x: auto; scrollbar-width: none; padding: 0 0.5rem;
+}
+.header-center::-webkit-scrollbar { display: none; }
+
 .header-right {
-display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;
+display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0;
 }
 
-/* ── Shared button ──────────────────────────────── */
-.btn {
-background: var(–surface2); border: 1px solid var(–border);
-color: var(–text); padding: 0.35rem 0.75rem;
-border-radius: 6px; cursor: pointer;
-font-family: ‘DM Mono’, monospace;
-font-size: clamp(0.65rem, 1vw, 0.75rem);
-letter-spacing: 0.04em; transition: all 0.15s; white-space: nowrap;
+/* ── Chip buttons ── */
+.chip {
+display: flex; align-items: center; gap: 0.35rem;
+padding: 0.3rem 0.65rem;
+border-radius: 20px;
+border: 1px solid var(–border);
+background: var(–panel2);
+color: var(–text2);
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 0.68rem;
+cursor: pointer;
+white-space: nowrap;
+transition: all 0.15s;
+letter-spacing: 0.04em;
 }
-.btn:hover  { border-color: var(–accent); color: var(–accent); }
-.btn.active { background: var(–accent); color: var(–bg); border-color: var(–accent); }
-.btn.danger { border-color: var(–danger); color: var(–danger); }
-.btn.danger:hover { background: var(–danger); color: var(–bg); }
+.chip:hover { border-color: var(–accent); color: var(–accent); background: var(–panel); }
+.chip.active { background: var(–accent); border-color: var(–accent); color: #fff; }
+.chip.danger { border-color: var(–danger); color: var(–danger); }
+.chip.danger:hover { background: var(–danger); color: #fff; }
 
-/* ── Sound controls ─────────────────────────────── */
-.sound-wrap {
-display: flex; align-items: center; gap: 0.4rem;
+/* Theme swatches */
+.theme-swatch {
+width: 18px; height: 18px; border-radius: 50%;
+border: 2px solid transparent;
+cursor: pointer; transition: all 0.15s; flex-shrink: 0;
 }
-.sound-label { font-size: 0.65rem; color: var(–muted); white-space: nowrap; }
+.theme-swatch:hover, .theme-swatch.active { border-color: var(–text); transform: scale(1.2); }
+.swatch-midnight { background: linear-gradient(135deg,#252a3d,#5e9ff2); }
+.swatch-slate    { background: linear-gradient(135deg,#ffffff,#3b6fd4); border-color: #d0d5e2; }
+.swatch-ember    { background: linear-gradient(135deg,#2a2620,#e89040); }
+.swatch-arctic   { background: linear-gradient(135deg,#ffffff,#0077cc); border-color: #c0d4ec; }
+.swatch-noir     { background: linear-gradient(135deg,#111114,#c0c0cc); }
+
+/* ── Sound select ── */
+.sound-row { display: flex; align-items: center; gap: 0.4rem; }
+.sound-row label { font-size: 0.65rem; color: var(–text3); }
 input[type=range] {
--webkit-appearance: none; height: 3px;
-background: var(–border); border-radius: 2px; width: clamp(50px,6vw,90px); cursor: pointer;
+-webkit-appearance: none; appearance: none;
+width: 68px; height: 3px;
+background: var(–border); border-radius: 2px; cursor: pointer;
 }
 input[type=range]::-webkit-slider-thumb {
--webkit-appearance: none; width: 11px; height: 11px;
+-webkit-appearance: none; width: 12px; height: 12px;
 border-radius: 50%; background: var(–accent); cursor: pointer;
 }
-select.btn { padding: 0.3rem 0.5rem; }
+select.chip { cursor: pointer; }
 
-/* ── BT dot ─────────────────────────────────────── */
-.bt-wrap { display: flex; align-items: center; gap: 0.35rem; }
-.bt-dot  { width: 7px; height: 7px; border-radius: 50%; background: var(–muted); transition: background 0.3s; flex-shrink: 0; }
-.bt-dot.on { background: var(–accent3); box-shadow: 0 0 6px var(–accent3); }
-
-/* ── Layout tabs ─────────────────────────────────── */
-.layout-bar {
-display: flex; gap: 0.4rem; padding: 0.65rem clamp(0.75rem,2vw,2rem);
-border-bottom: 1px solid var(–border); background: var(–surface);
-flex-shrink: 0; overflow-x: auto; scrollbar-width: none;
+/* ═══════════════════════════════════════════════════════
+LAYOUT TABS
+═══════════════════════════════════════════════════════ */
+.layout-tabs {
+background: var(–panel);
+border-bottom: 1px solid var(–border);
+padding: 0 1.5rem;
+display: flex; align-items: center; gap: 0;
+overflow-x: auto; scrollbar-width: none;
+flex-shrink: 0;
 }
-.layout-bar::-webkit-scrollbar { display: none; }
-.layout-tab {
-padding: 0.3rem 0.75rem; border-radius: 20px;
-border: 1px solid var(–border); font-size: clamp(0.6rem, 0.9vw, 0.7rem);
-cursor: pointer; transition: all 0.15s; background: transparent;
-color: var(–muted); letter-spacing: 0.08em; text-transform: uppercase;
-white-space: nowrap; flex-shrink: 0;
-}
-.layout-tab:hover { color: var(–text); border-color: var(–accent2); }
-.layout-tab.active { background: var(–accent2); border-color: var(–accent2); color: var(–bg); font-weight: 500; }
+.layout-tabs::-webkit-scrollbar { display: none; }
 
-/* ── Main ───────────────────────────────────────── */
-main {
-flex: 1; display: flex; flex-direction: column; align-items: center;
-padding: clamp(0.75rem,1.5vw,1.5rem) clamp(0.5rem,1.5vw,1.5rem) clamp(1rem,2vw,2rem);
-gap: clamp(0.75rem,1.5vw,1.5rem);
+.ltab {
+padding: 0.6rem 1rem;
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 0.7rem; font-weight: 500;
+letter-spacing: 0.08em; text-transform: uppercase;
+color: var(–text3);
+cursor: pointer;
+border-bottom: 2px solid transparent;
+transition: all 0.15s;
+white-space: nowrap;
+border-top: none; border-left: none; border-right: none;
+background: transparent;
+}
+.ltab:hover { color: var(–text2); }
+.ltab.active { color: var(–accent); border-bottom-color: var(–accent); }
+
+/* ═══════════════════════════════════════════════════════
+MAIN LAYOUT
+═══════════════════════════════════════════════════════ */
+.app-body {
+flex: 1; display: flex; flex-direction: column;
+align-items: center;
+padding: 1.25rem 1rem 1.5rem;
+gap: 1rem;
 min-height: 0;
 }
 
-/* ── Output area ─────────────────────────────────── */
-.output-area {
-width: 100%; max-width: 960px;
-background: var(–surface); border: 1px solid var(–border); border-radius: 10px;
-overflow: hidden; flex-shrink: 0;
+/* ═══════════════════════════════════════════════════════
+TOP ROW: OUTPUT + STATS
+═══════════════════════════════════════════════════════ */
+.top-row {
+width: 100%; max-width: 980px;
+display: grid;
+grid-template-columns: 1fr auto;
+gap: 1rem;
+align-items: start;
 }
-.output-header {
+
+/* Output */
+.output-card {
+background: var(–panel);
+border: 1px solid var(–border);
+border-radius: 10px;
+overflow: hidden;
+}
+.output-bar {
 display: flex; justify-content: space-between; align-items: center;
-padding: 0.4rem 0.85rem; border-bottom: 1px solid var(–border);
-font-size: 0.65rem; color: var(–muted); text-transform: uppercase; letter-spacing: 0.1em;
+padding: 0.45rem 0.85rem;
+border-bottom: 1px solid var(–border);
+font-size: 0.65rem; color: var(–text3);
+letter-spacing: 0.08em; text-transform: uppercase;
 }
-.output-actions { display: flex; gap: 0.4rem; align-items: center; }
-.output-text {
-width: 100%; min-height: clamp(56px, 8vh, 90px);
-background: transparent; border: none; color: var(–text);
-font-family: ‘DM Mono’, monospace; font-size: clamp(0.8rem, 1.4vw, 1rem);
-padding: 0.75rem 0.85rem; resize: vertical; outline: none; line-height: 1.6;
+.output-bar-right { display: flex; align-items: center; gap: 0.5rem; }
+textarea#output {
+width: 100%; min-height: 72px; max-height: 160px;
+background: transparent; border: none; outline: none; resize: vertical;
+color: var(–text);
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 0.95rem; line-height: 1.65;
+padding: 0.75rem 0.85rem;
+caret-color: var(–accent);
 }
 
-/* ── Keyboard shell ──────────────────────────────── */
-.keyboard-wrap { width: 100%; max-width: 960px; }
+/* Stats panel */
+.stats-card {
+background: var(–panel);
+border: 1px solid var(–border);
+border-radius: 10px;
+padding: 0.85rem 1rem;
+display: flex; flex-direction: column; gap: 0.55rem;
+min-width: 160px;
+}
+.stat-row {
+display: flex; justify-content: space-between; align-items: baseline; gap: 1rem;
+}
+.stat-label { font-size: 0.6rem; color: var(–text3); letter-spacing: 0.1em; text-transform: uppercase; }
+.stat-val { font-size: 1.1rem; font-weight: 600; color: var(–text); font-family: ‘Syne’, sans-serif; }
+.stat-val.accent { color: var(–accent); }
+.stat-val.green  { color: var(–accent3); }
+.stat-divider { height: 1px; background: var(–border); }
+
+/* Timer */
+.timer-display {
+font-family: ‘Syne’, sans-serif; font-weight: 700;
+font-size: 1.6rem; color: var(–accent); text-align: center;
+letter-spacing: 0.04em; line-height: 1;
+}
+.timer-display.warn { color: var(–danger); animation: pulse 0.6s ease-in-out infinite alternate; }
+@keyframes pulse { to { opacity: 0.5; } }
+
+.timer-controls { display: flex; gap: 0.4rem; justify-content: center; }
+
+/* ═══════════════════════════════════════════════════════
+THE KEYBOARD
+═══════════════════════════════════════════════════════ */
+.kb-wrap {
+width: 100%; max-width: 980px;
+}
+
+/* The keyboard frame — looks like a real board */
 .keyboard {
-background: var(–surface); border: 1px solid var(–border);
-border-radius: clamp(8px,1.2vw,14px);
-padding: clamp(0.6rem,1.2vw,1.2rem);
-display: flex; flex-direction: column; gap: var(–kb-gap);
-box-shadow: 0 20px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04);
+background: var(–bg2);
+border: 1px solid var(–border);
+border-radius: 14px;
+padding: 14px 14px 18px;
+/* subtle inner lighting */
+box-shadow:
+0 0 0 1px var(–border2) inset,
+0 24px 48px rgba(0,0,0,0.35),
+0 2px 0 rgba(255,255,255,0.04) inset;
+display: flex;
+flex-direction: column;
+gap: 6px;
 }
 
-/* ── Key row — NEVER wraps ───────────────────────── */
-.key-row {
+/* Each row is a flex row — NO wrapping, keys proportionally sized */
+.kr {
 display: flex;
-gap: var(–kb-gap);
+gap: 5px;
 width: 100%;
 flex-wrap: nowrap;
 }
 
-/* ── Base key ────────────────────────────────────── */
-.key {
-flex: var(–w, 1) 1 0;   /* flex-grow = –w, flex-shrink=1 so row always fits */
+/* ── BASE KEY CAP ── */
+.k {
+/* Proportional width via flex-grow */
+flex: var(–kw, 1) 0 0;
 min-width: 0;
-height: var(–key-h);
-background: var(–key-bg);
-border: 1px solid var(–border);
-border-radius: var(–key-r);
-color: var(–text);
-cursor: pointer;
-font-family: ‘DM Mono’, monospace;
-font-size: var(–key-fs);
-position: relative;
+/* Height: standard key height */
+height: clamp(38px, 4.8vw, 52px);
+
+/* The 3D keycap look */
+background: var(–key-face);
+border: 1px solid var(–key-border);
+border-radius: 5px;
 box-shadow: var(–key-shadow);
-transition: background 0.08s, box-shadow 0.08s, transform 0.06s, border-color 0.1s;
+
+/* Typography */
+color: var(–key-text);
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: clamp(9px, 1.05vw, 12.5px);
+font-weight: 400;
+
+/* Layout */
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+position: relative;
+cursor: pointer;
 user-select: none;
-display: flex; flex-direction: column;
-align-items: center; justify-content: center;
-line-height: 1.1;
 -webkit-tap-highlight-color: transparent;
 touch-action: manipulation;
-overflow: hidden;
+overflow: visible;
+transition: background 0.07s, box-shadow 0.07s, transform 0.05s;
+outline: none;
+line-height: 1.1;
+padding: 2px 3px;
 }
-.key:hover  { background: var(–key-hover); border-color: var(–accent); }
-.key.pressed { transform: translateY(2px); box-shadow: var(–key-shadow-p); background: var(–key-press); }
 
-.key .sub  { font-size: var(–key-fs-sub); color: var(–muted); line-height: 1; }
-.key .main { line-height: 1; }
-.key.muted-text { color: var(–muted); font-size: var(–key-fs-sub); }
-
-/* ── Key glow animation ──────────────────────────── */
-@keyframes glow {
-0%   { box-shadow: var(–key-shadow-p), 0 0 0 0 var(–glow); }
-40%  { box-shadow: var(–key-shadow-p), 0 0 18px 5px var(–glow); }
-100% { box-shadow: var(–key-shadow),   0 0 0 0 var(–glow); }
+/* Symbol on top-left, letter bottom-right — classic keycap layout */
+.k .ks {
+/* shift symbol — top left */
+position: absolute;
+top: 4px; left: 5px;
+font-size: clamp(7px, 0.8vw, 10px);
+color: var(–key-text2);
+line-height: 1;
 }
-.key.glow { animation: glow 0.45s ease-out forwards; }
-
-/* ── Steno-specific colors ───────────────────────── */
-.key.steno-l { border-color: #2a3855; }
-.key.steno-r { border-color: #2a4535; color: var(–accent3); }
-.key.steno-v { background: #18243a; border-color: #3a5080; color: var(–accent); }
-.key.steno-star { color: var(–accent2); font-size: var(–key-fs); }
-.key.steno-num {
-flex: 1 1 0; height: clamp(22px, 3vw, 30px);
-font-size: var(–key-fs-sub); color: var(–muted);
-letter-spacing: 0.15em;
+.k .km {
+/* main character */
+position: absolute;
+bottom: 4px; right: 6px;
+font-size: clamp(9px, 1.05vw, 13px);
+color: var(–key-text);
+line-height: 1;
 }
-.key.steno-gap {
-background: transparent; border-color: transparent;
-box-shadow: none; cursor: default; pointer-events: none;
+/* Single-label keys (no shift symbol): center the text */
+.k.single { justify-content: center; align-items: center; }
+.k.single .km {
+position: static;
+font-size: clamp(8px, 0.9vw, 11.5px);
+color: var(–key-text2);
 }
-.key.steno-gap:hover { background: transparent; border-color: transparent; }
 
-/* ── Steno chord display ─────────────────────────── */
-#stenoChord {
-font-family: ‘Playfair Display’, serif;
-font-size: clamp(1rem,2.5vw,1.4rem);
+/* Hover and press states */
+.k:hover  { background: var(–key-hover); border-color: var(–border2); }
+.k.active,
+.k:active {
+background: var(–key-active);
+box-shadow: var(–key-pressed);
+transform: translateY(3px);
+}
+
+/* Glow ripple on press */
+@keyframes kglow {
+0%   { box-shadow: var(–key-pressed), 0 0 0 0 var(–glow-color); }
+50%  { box-shadow: var(–key-pressed), 0 0 14px 6px var(–glow-color); }
+100% { box-shadow: var(–key-shadow),  0 0 0 0 transparent; }
+}
+.k.glow { animation: kglow 0.4s ease-out forwards; }
+
+/* Modifier keys — slightly different tone */
+.k.mod .km { color: var(–key-text2); font-size: clamp(7.5px, 0.85vw, 10.5px); }
+.k.fn .km  { color: var(–accent2); font-size: clamp(7px, 0.8vw, 10px); }
+
+/* Spacebar label */
+.k.space-key .km {
+position: static; font-size: clamp(7px, 0.8vw, 10px); color: var(–key-text2);
+}
+
+/* ── STENO KEY VARIANTS ── */
+.k.sk-l  { border-bottom-color: var(–accent); border-bottom-width: 2px; }
+.k.sk-r  { border-bottom-color: var(–accent3); border-bottom-width: 2px; color: var(–accent3); }
+.k.sk-v  {
+background: var(–key-accent);
+border-bottom-color: var(–accent2); border-bottom-width: 2px;
+}
+.k.sk-v .km { color: var(–accent2); font-size: clamp(10px, 1.2vw, 15px); font-weight: 600; }
+.k.sk-star .km { color: var(–accent); font-size: clamp(10px, 1.2vw, 15px); }
+.k.sk-num { height: clamp(22px,2.8vw,30px); }
+.k.sk-num .km { font-size: clamp(7px,0.75vw,9px); color: var(–text3); letter-spacing: 0.12em; }
+.k.sk-gap { background: transparent; border-color: transparent; box-shadow: none; cursor: default; pointer-events: none; }
+.k.sk-gap:hover { background: transparent; border-color: transparent; }
+
+/* Steno bottom row is shorter */
+.steno-bot .k { height: clamp(34px,4.3vw,46px); }
+
+/* ── NUMPAD ── */
+.numpad-wrap { display: flex; justify-content: center; }
+.numpad-inner { display: flex; flex-direction: column; gap: 6px; width: clamp(200px,30vw,280px); }
+
+/* ═══════════════════════════════════════════════════════
+STENO CHORD DISPLAY
+═══════════════════════════════════════════════════════ */
+.steno-chord-display {
+font-family: ‘Syne’, sans-serif;
+font-size: clamp(1rem, 2vw, 1.3rem);
 color: var(–accent2);
-letter-spacing: 0.2em;
-min-height: 2rem;
+letter-spacing: 0.18em;
 text-align: center;
+min-height: 2rem;
 display: none;
+padding: 0.2rem 0;
 }
 
-/* ── Status bar ──────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════
+STATUS BAR
+═══════════════════════════════════════════════════════ */
 .status-bar {
-width: 100%; max-width: 960px;
-display: flex; gap: clamp(0.5rem,1.5vw,1rem); flex-wrap: wrap;
-font-size: clamp(0.6rem,0.85vw,0.7rem); color: var(–muted);
+width: 100%; max-width: 980px;
+display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap;
+font-size: 0.62rem; color: var(–text3); letter-spacing: 0.06em;
 }
-.status-item { display: flex; align-items: center; gap: 0.3rem; }
-.s-dot { width: 6px; height: 6px; border-radius: 50%; background: var(–border); flex-shrink: 0; }
-.s-dot.on { background: var(–accent3); }
+.si { display: flex; align-items: center; gap: 0.3rem; }
+.dot { width: 6px; height: 6px; border-radius: 50%; background: var(–border2); transition: background 0.2s; flex-shrink: 0; }
+.dot.on { background: var(–accent3); box-shadow: 0 0 5px var(–accent3); }
+.dot.warn { background: var(–danger); }
 
-/* ── Modal ───────────────────────────────────────── */
-.modal-overlay {
+/* ═══════════════════════════════════════════════════════
+SCORE MODAL
+═══════════════════════════════════════════════════════ */
+.overlay {
 display: none; position: fixed; inset: 0;
-background: rgba(0,0,0,0.72); z-index: 1000;
-align-items: center; justify-content: center;
-padding: 1rem;
+background: rgba(0,0,0,0.75); z-index: 200;
+align-items: center; justify-content: center; padding: 1.5rem;
 }
-.modal-overlay.open { display: flex; }
-.modal {
-background: var(–surface); border: 1px solid var(–border);
-border-radius: 12px; padding: 1.75rem; max-width: 440px; width: 100%;
+.overlay.open { display: flex; }
+
+.score-modal {
+background: var(–panel);
+border: 1px solid var(–border2);
+border-radius: 16px;
+padding: 2rem 2.2rem;
+max-width: 440px; width: 100%;
 box-shadow: 0 30px 80px rgba(0,0,0,0.6);
 }
-.modal h2 { font-family:‘Playfair Display’,serif; color:var(–accent); margin-bottom:0.85rem; font-size:1.2rem; }
-.modal p  { font-size:0.78rem; color:var(–muted); line-height:1.7; margin-bottom:0.65rem; }
-.modal code { background:var(–surface2); padding:0.1rem 0.35rem; border-radius:4px; color:var(–accent2); font-size:0.72rem; }
-.modal-btns { display:flex; gap:0.5rem; margin-top:1rem; flex-wrap:wrap; }
+.score-modal h2 {
+font-family: ‘Syne’, sans-serif; font-weight: 700;
+font-size: 1.4rem; color: var(–accent); margin-bottom: 1.5rem;
+letter-spacing: -0.02em;
+}
+.score-grid {
+display: grid; grid-template-columns: 1fr 1fr;
+gap: 1rem 1.5rem; margin-bottom: 1.5rem;
+}
+.score-cell { display: flex; flex-direction: column; gap: 0.2rem; }
+.score-cell .label { font-size: 0.62rem; color: var(–text3); letter-spacing: 0.1em; text-transform: uppercase; }
+.score-cell .value {
+font-family: ‘Syne’, sans-serif; font-size: 1.8rem; font-weight: 700;
+color: var(–text); line-height: 1;
+}
+.score-cell .value.hi { color: var(–accent); }
+.score-cell .value.green { color: var(–accent3); }
+.score-cell .value.warn  { color: var(–danger); }
+.score-bar { height: 4px; background: var(–border); border-radius: 2px; margin: 0.3rem 0; overflow: hidden; }
+.score-bar-fill { height: 100%; background: linear-gradient(90deg, var(–accent), var(–accent2)); border-radius: 2px; transition: width 0.8s cubic-bezier(0.4,0,0.2,1); }
+.score-grade {
+text-align: center;
+font-family: ‘Syne’, sans-serif; font-size: 4rem; font-weight: 800;
+line-height: 1; margin: 0.5rem 0 1rem;
+}
+.score-msg { font-size: 0.78rem; color: var(–text2); line-height: 1.6; margin-bottom: 1.5rem; }
+.score-actions { display: flex; gap: 0.75rem; }
 
-/* ── Responsive tweaks ───────────────────────────── */
-@media (max-width: 540px) {
-:root {
-–key-h:     clamp(30px, 8vw, 42px);
-–key-fs:    clamp(8px, 2.1vw, 11px);
-–key-fs-sub:clamp(6px, 1.6vw, 9px);
-–kb-gap:    clamp(2px, 0.7vw, 4px);
+/* BT modal */
+.bt-modal {
+background: var(–panel);
+border: 1px solid var(–border2);
+border-radius: 14px;
+padding: 1.75rem;
+max-width: 420px; width: 100%;
+box-shadow: 0 30px 80px rgba(0,0,0,0.6);
 }
-.sound-wrap { display: none; }
+.bt-modal h2 { font-family:‘Syne’,sans-serif; font-size:1.2rem; color:var(–accent); margin-bottom:0.9rem; }
+.bt-modal p  { font-size:0.76rem; color:var(–text2); line-height:1.7; margin-bottom:0.6rem; }
+.bt-modal code { background:var(–panel2); padding:0.1rem 0.35rem; border-radius:4px; color:var(–accent2); font-size:0.72rem; }
+.modal-btns { display:flex; gap:0.6rem; margin-top:1.2rem; flex-wrap:wrap; }
+
+/* ═══════════════════════════════════════════════════════
+RESPONSIVE
+═══════════════════════════════════════════════════════ */
+@media (max-width: 680px) {
+.top-row { grid-template-columns: 1fr; }
+.stats-card { flex-direction: row; flex-wrap: wrap; justify-content: space-between; min-width: unset; }
+.stat-divider { display: none; }
+.sound-row { display: none; }
+.app-header { padding: 0 0.85rem; }
+.keyboard { padding: 10px 10px 13px; gap: 5px; }
+.kr { gap: 4px; }
 }
-@media (max-width: 380px) {
-:root { –key-h: 28px; }
+@media (max-width: 420px) {
+.keyboard { padding: 8px 8px 11px; gap: 4px; }
+.kr { gap: 3px; }
 }
 </style>
 
 </head>
-<body>
+<body data-theme="midnight">
 
-<!-- ───── HEADER ───── -->
+<!-- ═══════ HEADER ═══════ -->
 
-<header>
-  <div class="logo">KeyFlow</div>
-  <div class="header-right">
-    <div class="sound-wrap">
-      <span class="sound-label">🎵</span>
+<header class="app-header">
+  <div class="logo">Key<span>Flow</span></div>
+
+  <div class="header-center">
+    <div style="display:flex;align-items:center;gap:6px;border-right:1px solid var(--border);padding-right:10px;margin-right:4px;">
+      <span style="font-size:0.6rem;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;">Theme</span>
+      <div class="theme-swatch swatch-midnight active" data-t="midnight" title="Midnight"></div>
+      <div class="theme-swatch swatch-slate"    data-t="slate"    title="Slate"></div>
+      <div class="theme-swatch swatch-ember"    data-t="ember"    title="Ember"></div>
+      <div class="theme-swatch swatch-arctic"   data-t="arctic"   title="Arctic"></div>
+      <div class="theme-swatch swatch-noir"     data-t="noir"     title="Noir"></div>
+    </div>
+    <div class="sound-row">
+      <label>🎵</label>
       <input type="range" id="volSlider" min="0" max="1" step="0.05" value="0.4">
-      <select id="soundPreset" class="btn">
+      <select id="soundPreset" class="chip">
         <option value="bell">Bell</option>
         <option value="soft">Soft Pad</option>
         <option value="click">Crystal</option>
@@ -300,490 +623,691 @@ box-shadow: 0 30px 80px rgba(0,0,0,0.6);
         <option value="chime">Chime</option>
       </select>
     </div>
-    <button class="btn bt-wrap" id="btBtn">
-      <span>⬡ BT</span>
-      <span class="bt-dot" id="btDot"></span>
-    </button>
-    <button class="btn" id="shiftBtn">⇧ Shift</button>
-    <button class="btn danger" id="clearBtn">✕ Clear</button>
+  </div>
+
+  <div class="header-right">
+    <button class="chip" id="btBtn">⬡ BT <span class="dot" id="btDot" style="display:inline-block"></span></button>
+    <button class="chip" id="shiftBtn">⇧ Shift</button>
+    <button class="chip danger" id="clearBtn">✕ Clear</button>
   </div>
 </header>
 
-<!-- ───── LAYOUT TABS ───── -->
+<!-- ═══════ LAYOUT TABS ═══════ -->
 
-<div class="layout-bar">
-  <button class="layout-tab active" data-layout="qwerty">QWERTY</button>
-  <button class="layout-tab" data-layout="dvorak">Dvorak</button>
-  <button class="layout-tab" data-layout="colemak">Colemak</button>
-  <button class="layout-tab" data-layout="steno">Steno</button>
-  <button class="layout-tab" data-layout="numpad">Numpad</button>
+<div class="layout-tabs">
+  <button class="ltab active" data-layout="qwerty">QWERTY</button>
+  <button class="ltab" data-layout="dvorak">Dvorak</button>
+  <button class="ltab" data-layout="colemak">Colemak</button>
+  <button class="ltab" data-layout="steno">Steno</button>
+  <button class="ltab" data-layout="numpad">Numpad</button>
 </div>
 
-<!-- ───── MAIN ───── -->
+<!-- ═══════ MAIN ═══════ -->
 
-<main>
-  <div class="output-area">
-    <div class="output-header">
-      <span>Output</span>
-      <div class="output-actions">
-        <span id="charCount" style="color:var(--muted)">0 chars</span>
-        <button class="btn" id="copyBtn">Copy</button>
+<main class="app-body">
+
+  <!-- Top row: output + stats -->
+
+  <div class="top-row">
+    <div class="output-card">
+      <div class="output-bar">
+        <span>Output</span>
+        <div class="output-bar-right">
+          <span id="charCount" style="color:var(--text3)">0 chars</span>
+          <span id="wpmLive" style="color:var(--accent3);font-size:0.65rem;letter-spacing:0.06em">— WPM</span>
+          <button class="chip" id="copyBtn" style="padding:0.2rem 0.5rem">Copy</button>
+        </div>
       </div>
+      <textarea id="output" placeholder="Start typing — session timer begins on first keystroke…" spellcheck="false"></textarea>
     </div>
-    <textarea class="output-text" id="output" placeholder="Start typing…" spellcheck="false"></textarea>
+
+```
+<div class="stats-card">
+  <div class="timer-display" id="timerDisplay">0:00</div>
+  <div class="timer-controls">
+    <button class="chip" id="timerStartBtn">▶ Start</button>
+    <button class="chip" id="timerResetBtn">↺</button>
+  </div>
+  <div style="display:flex;gap:0.4rem;justify-content:center;flex-wrap:wrap">
+    <button class="chip active" data-dur="60">1 min</button>
+    <button class="chip" data-dur="120">2 min</button>
+    <button class="chip" data-dur="300">5 min</button>
+  </div>
+  <div class="stat-divider"></div>
+  <div class="stat-row">
+    <span class="stat-label">WPM</span>
+    <span class="stat-val accent" id="statWpm">—</span>
+  </div>
+  <div class="stat-row">
+    <span class="stat-label">Chars</span>
+    <span class="stat-val" id="statChars">0</span>
+  </div>
+  <div class="stat-row">
+    <span class="stat-label">Words</span>
+    <span class="stat-val" id="statWords">0</span>
+  </div>
+  <div class="stat-row">
+    <span class="stat-label">Keystrokes</span>
+    <span class="stat-val green" id="statKeys">0</span>
+  </div>
+</div>
+```
+
   </div>
 
-  <div id="stenoChord"></div>
+  <!-- Steno chord live display -->
 
-  <div class="keyboard-wrap">
+  <div class="steno-chord-display" id="stenoChord"></div>
+
+  <!-- Keyboard -->
+
+  <div class="kb-wrap">
     <div class="keyboard" id="keyboard"></div>
   </div>
 
+  <!-- Status bar -->
+
   <div class="status-bar">
-    <div class="status-item"><span class="s-dot" id="dotShift"></span><span>Shift</span></div>
-    <div class="status-item"><span class="s-dot" id="dotCaps"></span><span>Caps</span></div>
-    <div class="status-item"><span class="s-dot on"></span><span>Audio</span></div>
-    <div class="status-item"><span class="s-dot" id="dotBT"></span><span id="btLabel">Bluetooth: Off</span></div>
-    <div class="status-item"><span class="s-dot on"></span><span id="layoutLabel">QWERTY</span></div>
+    <div class="si"><span class="dot" id="dotShift"></span><span id="lblShift">Shift</span></div>
+    <div class="si"><span class="dot" id="dotCaps"></span><span>Caps</span></div>
+    <div class="si"><span class="dot on"></span><span>Audio</span></div>
+    <div class="si"><span class="dot" id="dotBT2"></span><span id="lblBT">Bluetooth: Off</span></div>
+    <div class="si"><span class="dot on"></span><span id="lblLayout">QWERTY</span></div>
+    <div class="si"><span class="dot" id="dotTimer"></span><span id="lblTimer">Timer: Ready</span></div>
   </div>
+
 </main>
 
-<!-- ───── BT MODAL ───── -->
+<!-- ═══════ SCORE MODAL ═══════ -->
 
-<div class="modal-overlay" id="btModal">
-  <div class="modal">
-    <h2>Bluetooth Connection</h2>
-    <p>KeyFlow uses the <code>Web Bluetooth API</code> (Chrome / Edge only). After pairing, typed characters are forwarded to the device via BLE.</p>
-    <p><strong style="color:var(--text)">Best results:</strong> A BLE HID peripheral (e.g. an ESP32 running BLE HID firmware) acting as a keyboard bridge gives full keystroke injection to any paired host.</p>
-    <p>No BLE device? Use <strong style="color:var(--text)">Copy</strong> to paste into any app on any device.</p>
+<div class="overlay" id="scoreOverlay">
+  <div class="score-modal">
+    <h2>Session Report</h2>
+    <div class="score-grade" id="scoreGrade">—</div>
+    <div class="score-msg" id="scoreMsg"></div>
+    <div class="score-grid">
+      <div class="score-cell">
+        <span class="label">WPM</span>
+        <span class="value hi" id="sc-wpm">—</span>
+      </div>
+      <div class="score-cell">
+        <span class="label">Characters</span>
+        <span class="value" id="sc-chars">0</span>
+      </div>
+      <div class="score-cell">
+        <span class="label">Words</span>
+        <span class="value" id="sc-words">0</span>
+      </div>
+      <div class="score-cell">
+        <span class="label">Keystrokes</span>
+        <span class="value green" id="sc-keys">0</span>
+      </div>
+      <div class="score-cell" style="grid-column:1/-1">
+        <span class="label">Keys / Second</span>
+        <span class="value" id="sc-kps">0.0</span>
+        <div class="score-bar"><div class="score-bar-fill" id="sc-bar" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div class="score-actions">
+      <button class="chip active" id="scoreClose">New Session</button>
+      <button class="chip" id="scoreCopy">Copy Results</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ BT MODAL ═══════ -->
+
+<div class="overlay" id="btOverlay">
+  <div class="bt-modal">
+    <h2>Bluetooth</h2>
+    <p>Uses the <code>Web Bluetooth API</code> (Chrome / Edge). Typed characters are forwarded via BLE to a paired device.</p>
+    <p><strong style="color:var(--text)">Best setup:</strong> An ESP32 or similar microcontroller running BLE HID firmware acts as a wireless keyboard bridge to any host device.</p>
+    <p>No BLE? Use <strong style="color:var(--text)">Copy</strong> and paste anywhere.</p>
     <div class="modal-btns">
-      <button class="btn active" id="btConnect">Connect Device</button>
-      <button class="btn" id="btClose">Cancel</button>
+      <button class="chip active" id="btConnect">Scan & Connect</button>
+      <button class="chip" id="btClose">Cancel</button>
     </div>
   </div>
 </div>
 
 <script>
 'use strict';
-
-// ════════════════════════════════════════════
-//  AUDIO ENGINE
-// ════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════
+   AUDIO ENGINE
+═══════════════════════════════════════════════════════ */
 let _ctx;
-const ac = () => {
+const getCtx = () => {
   if (!_ctx) _ctx = new (window.AudioContext || window.webkitAudioContext)();
   if (_ctx.state === 'suspended') _ctx.resume();
   return _ctx;
 };
 
 function playTone() {
-  const preset = document.getElementById('soundPreset').value;
-  const vol    = +document.getElementById('volSlider').value;
+  const vol = +document.getElementById('volSlider').value;
   if (vol === 0) return;
-  const ctx = ac(), t = ctx.currentTime;
+  const preset = document.getElementById('soundPreset').value;
+  const ctx = getCtx(), t = ctx.currentTime;
 
-  const mkOsc = (type, freq, gainPeak, decay) => {
+  const osc = (type, freq, peak, decay, dest) => {
     const o = ctx.createOscillator(), g = ctx.createGain();
     o.type = type; o.frequency.value = freq;
-    g.gain.setValueAtTime(gainPeak * vol, t);
+    g.gain.setValueAtTime(peak * vol, t);
     g.gain.exponentialRampToValueAtTime(0.0001, t + decay);
-    o.connect(g); g.connect(ctx.destination);
+    o.connect(g); g.connect(dest || ctx.destination);
     o.start(t); o.stop(t + decay);
   };
 
-  const SCALE = [523.25, 587.33, 659.25, 698.46, 783.99, 880, 987.77];
-  const rnd   = arr => arr[Math.floor(Math.random() * arr.length)];
+  const SCALE = [523.25, 587.33, 659.25, 698.46, 783.99, 880];
+  const pick  = a => a[Math.floor(Math.random() * a.length)];
 
-  const P = {
-    bell:  () => {
-      mkOsc('sine', 880 + Math.random()*440, 0.35, 0.9);
-      mkOsc('sine', 1760 + Math.random()*880, 0.1, 0.4);
-    },
-    soft:  () => [1,1.5,2].forEach((r,i) => mkOsc('sine', 330*r, 0.09/(i+1), 0.7)),
-    click: () => { mkOsc('triangle', 1200, 0.28, 0.05); mkOsc('sine', 400, 0.12, 0.12); },
-    harp:  () => mkOsc('triangle', rnd(SCALE), 0.3, 1.3),
+  ({
+    bell:  () => { osc('sine', 880+Math.random()*400,0.3,0.8); osc('sine',1760+Math.random()*600,0.08,0.35); },
+    soft:  () => [1,1.5,2].forEach((r,i) => osc('sine',330*r,0.08/(i+1),0.65)),
+    click: () => { osc('triangle',1100,0.25,0.04); osc('sine',380,0.1,0.1); },
+    harp:  () => osc('triangle', pick(SCALE), 0.28, 1.2),
     chime: () => {
-      const f = rnd(SCALE);
-      const o = ctx.createOscillator(), g = ctx.createGain(), d = ctx.createDelay(0.3);
-      o.type = 'sine'; o.frequency.value = f; d.delayTime.value = 0.07;
-      g.gain.setValueAtTime(0.22*vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t+1.6);
+      const f=pick(SCALE), o=ctx.createOscillator(), g=ctx.createGain(), d=ctx.createDelay(0.3);
+      o.type='sine'; o.frequency.value=f; d.delayTime.value=0.065;
+      g.gain.setValueAtTime(0.2*vol,t); g.gain.exponentialRampToValueAtTime(0.0001,t+1.5);
       o.connect(g); g.connect(d); d.connect(ctx.destination); g.connect(ctx.destination);
-      o.start(t); o.stop(t+1.6);
+      o.start(t); o.stop(t+1.5);
     }
-  };
-  (P[preset] || P.bell)();
+  }[preset] || (() => {}))();
 }
 
-// ════════════════════════════════════════════
-//  LAYOUT DATA
-//  w = flex-grow multiplier (1 = standard key)
-// ════════════════════════════════════════════
-const LAYOUTS = {
+/* ═══════════════════════════════════════════════════════
+   LAYOUT DATA
+   Each key def: { v, s, k, w, cls }
+   w = flex-grow multiplier. All keys in a row should sum
+   to the same total so rows align perfectly.
+   Standard key = w:1. Total per row in standard full KB ≈ 14.6
+═══════════════════════════════════════════════════════ */
+const KBD = {
   qwerty: {
     name: 'QWERTY',
     rows: [
+      // Number row — 14 keys, total w = 14.6
       [
-        {v:'`',s:'~'},{v:'1',s:'!'},{v:'2',s:'@'},{v:'3',s:'#'},{v:'4',s:'$'},
-        {v:'5',s:'%'},{v:'6',s:'^'},{v:'7',s:'&'},{v:'8',s:'*'},{v:'9',s:'('},
-        {v:'0',s:')'},{v:'-',s:'_'},{v:'=',s:'+'},{v:'⌫',k:'backspace',w:1.8,cls:'muted-text'}
+        {v:'`',s:'~'}, {v:'1',s:'!'}, {v:'2',s:'@'}, {v:'3',s:'#'}, {v:'4',s:'$'},
+        {v:'5',s:'%'}, {v:'6',s:'^'}, {v:'7',s:'&'}, {v:'8',s:'*'}, {v:'9',s:'('},
+        {v:'0',s:')'}, {v:'-',s:'_'}, {v:'=',s:'+'}, {v:'⌫',k:'backspace',w:2,cls:'mod single'}
       ],
+      // QWERTY row — Tab(1.5) + 12 + backslash(1.5) = 14.5 + gaps ≈ 14.6
       [
-        {v:'Tab',k:'tab',w:1.5,cls:'muted-text'},
-        {v:'q'},{v:'w'},{v:'e'},{v:'r'},{v:'t'},{v:'y'},{v:'u'},{v:'i'},{v:'o'},{v:'p'},
-        {v:'[',s:'{'},{v:']',s:'}'},{v:'\\',s:'|',w:1.5,cls:'muted-text'}
+        {v:'Tab',k:'tab',w:1.5,cls:'mod single'},
+        {v:'q',s:'Q'},{v:'w',s:'W'},{v:'e',s:'E'},{v:'r',s:'R'},{v:'t',s:'T'},
+        {v:'y',s:'Y'},{v:'u',s:'U'},{v:'i',s:'I'},{v:'o',s:'O'},{v:'p',s:'P'},
+        {v:'[',s:'{'},{v:']',s:'}'},{v:'\\',s:'|',w:1.5,cls:'mod single'}
       ],
+      // Home row — Caps(1.75) + 11 + Enter(2.25) = 15, close enough
       [
-        {v:'Caps',k:'caps',w:1.8,cls:'muted-text'},
-        {v:'a'},{v:'s'},{v:'d'},{v:'f'},{v:'g'},{v:'h'},{v:'j'},{v:'k'},{v:'l'},
-        {v:';',s:':'},{v:"'",s:'"'},{v:'Enter',k:'enter',w:2.3,cls:'muted-text'}
+        {v:'Caps',k:'caps',w:1.75,cls:'mod single'},
+        {v:'a',s:'A'},{v:'s',s:'S'},{v:'d',s:'D'},{v:'f',s:'F'},{v:'g',s:'G'},
+        {v:'h',s:'H'},{v:'j',s:'J'},{v:'k',s:'K'},{v:'l',s:'L'},
+        {v:';',s:':'},{v:"'",s:'"'},
+        {v:'Enter',k:'enter',w:2.35,cls:'mod single'}
       ],
+      // Shift row
       [
-        {v:'⇧',k:'shift',w:2.3,cls:'muted-text'},
-        {v:'z'},{v:'x'},{v:'c'},{v:'v'},{v:'b'},{v:'n'},{v:'m'},
-        {v:',',s:'<'},{v:'.',s:'>'},{v:'/',s:'?'},
-        {v:'⇧',k:'shift',w:2.8,cls:'muted-text'}
+        {v:'⇧',k:'shift',w:2.35,cls:'mod single'},
+        {v:'z',s:'Z'},{v:'x',s:'X'},{v:'c',s:'C'},{v:'v',s:'V'},{v:'b',s:'B'},
+        {v:'n',s:'N'},{v:'m',s:'M'},{v:',',s:'<'},{v:'.',s:'>'},{v:'/',s:'?'},
+        {v:'⇧',k:'shift',w:2.85,cls:'mod single'}
       ],
+      // Space row
       [
-        {v:'Ctrl',k:'ctrl',w:1.35,cls:'muted-text'},
-        {v:'Alt',k:'alt',w:1.35,cls:'muted-text'},
-        {v:'',k:'space',w:6.6},
-        {v:'Alt',k:'alt',w:1.35,cls:'muted-text'},
-        {v:'Ctrl',k:'ctrl',w:1.35,cls:'muted-text'}
+        {v:'Ctrl',k:'ctrl',w:1.4,cls:'mod single'},{v:'⌘',k:'cmd',w:1.2,cls:'mod single'},
+        {v:'Alt',k:'alt',w:1.2,cls:'mod single'},
+        {v:'',k:'space',w:6.3,cls:'space-key single'},
+        {v:'Alt',k:'alt',w:1.2,cls:'mod single'},{v:'⌘',k:'cmd',w:1.2,cls:'mod single'},
+        {v:'Ctrl',k:'ctrl',w:1.4,cls:'mod single'}
       ]
     ]
   },
-
   dvorak: {
     name: 'Dvorak',
     rows: [
       [
         {v:'`',s:'~'},{v:'1',s:'!'},{v:'2',s:'@'},{v:'3',s:'#'},{v:'4',s:'$'},
         {v:'5',s:'%'},{v:'6',s:'^'},{v:'7',s:'&'},{v:'8',s:'*'},{v:'9',s:'('},
-        {v:'0',s:')'},{v:'[',s:'{'},{v:']',s:'}'},{v:'⌫',k:'backspace',w:1.8,cls:'muted-text'}
+        {v:'0',s:')'},{v:'[',s:'{'},{v:']',s:'}'},{v:'⌫',k:'backspace',w:2,cls:'mod single'}
       ],
       [
-        {v:'Tab',k:'tab',w:1.5,cls:'muted-text'},
-        {v:"'",s:'"'},{v:',',s:'<'},{v:'.',s:'>'},{v:'p'},{v:'y'},
-        {v:'f'},{v:'g'},{v:'c'},{v:'r'},{v:'l'},{v:'/'},
-        {v:'=',s:'+'},{v:'\\',s:'|',w:1.5,cls:'muted-text'}
+        {v:'Tab',k:'tab',w:1.5,cls:'mod single'},
+        {v:"'",s:'"'},{v:',',s:'<'},{v:'.',s:'>'},{v:'p',s:'P'},{v:'y',s:'Y'},
+        {v:'f',s:'F'},{v:'g',s:'G'},{v:'c',s:'C'},{v:'r',s:'R'},{v:'l',s:'L'},
+        {v:'/',s:'?'},{v:'=',s:'+'},{v:'\\',s:'|',w:1.5,cls:'mod single'}
       ],
       [
-        {v:'Caps',k:'caps',w:1.8,cls:'muted-text'},
-        {v:'a'},{v:'o'},{v:'e'},{v:'u'},{v:'i'},
-        {v:'d'},{v:'h'},{v:'t'},{v:'n'},{v:'s'},{v:'-',s:'_'},
-        {v:'Enter',k:'enter',w:2.3,cls:'muted-text'}
+        {v:'Caps',k:'caps',w:1.75,cls:'mod single'},
+        {v:'a',s:'A'},{v:'o',s:'O'},{v:'e',s:'E'},{v:'u',s:'U'},{v:'i',s:'I'},
+        {v:'d',s:'D'},{v:'h',s:'H'},{v:'t',s:'T'},{v:'n',s:'N'},{v:'s',s:'S'},
+        {v:'-',s:'_'},{v:'Enter',k:'enter',w:2.35,cls:'mod single'}
       ],
       [
-        {v:'⇧',k:'shift',w:2.3,cls:'muted-text'},
-        {v:';',s:':'},{v:'q'},{v:'j'},{v:'k'},{v:'x'},
-        {v:'b'},{v:'m'},{v:'w'},{v:'v'},{v:'z'},
-        {v:'⇧',k:'shift',w:2.8,cls:'muted-text'}
+        {v:'⇧',k:'shift',w:2.35,cls:'mod single'},
+        {v:';',s:':'},{v:'q',s:'Q'},{v:'j',s:'J'},{v:'k',s:'K'},{v:'x',s:'X'},
+        {v:'b',s:'B'},{v:'m',s:'M'},{v:'w',s:'W'},{v:'v',s:'V'},{v:'z',s:'Z'},
+        {v:'⇧',k:'shift',w:2.85,cls:'mod single'}
       ],
       [
-        {v:'Ctrl',k:'ctrl',w:1.35,cls:'muted-text'},
-        {v:'Alt',k:'alt',w:1.35,cls:'muted-text'},
-        {v:'',k:'space',w:6.6},
-        {v:'Alt',k:'alt',w:1.35,cls:'muted-text'},
-        {v:'Ctrl',k:'ctrl',w:1.35,cls:'muted-text'}
+        {v:'Ctrl',k:'ctrl',w:1.4,cls:'mod single'},{v:'⌘',k:'cmd',w:1.2,cls:'mod single'},
+        {v:'Alt',k:'alt',w:1.2,cls:'mod single'},
+        {v:'',k:'space',w:6.3,cls:'space-key single'},
+        {v:'Alt',k:'alt',w:1.2,cls:'mod single'},{v:'⌘',k:'cmd',w:1.2,cls:'mod single'},
+        {v:'Ctrl',k:'ctrl',w:1.4,cls:'mod single'}
       ]
     ]
   },
-
   colemak: {
     name: 'Colemak',
     rows: [
       [
         {v:'`',s:'~'},{v:'1',s:'!'},{v:'2',s:'@'},{v:'3',s:'#'},{v:'4',s:'$'},
         {v:'5',s:'%'},{v:'6',s:'^'},{v:'7',s:'&'},{v:'8',s:'*'},{v:'9',s:'('},
-        {v:'0',s:')'},{v:'-',s:'_'},{v:'=',s:'+'},{v:'⌫',k:'backspace',w:1.8,cls:'muted-text'}
+        {v:'0',s:')'},{v:'-',s:'_'},{v:'=',s:'+'},{v:'⌫',k:'backspace',w:2,cls:'mod single'}
       ],
       [
-        {v:'Tab',k:'tab',w:1.5,cls:'muted-text'},
-        {v:'q'},{v:'w'},{v:'f'},{v:'p'},{v:'g'},
-        {v:'j'},{v:'l'},{v:'u'},{v:'y'},{v:';',s:':'},
-        {v:'[',s:'{'},{v:']',s:'}'},{v:'\\',s:'|',w:1.5,cls:'muted-text'}
+        {v:'Tab',k:'tab',w:1.5,cls:'mod single'},
+        {v:'q',s:'Q'},{v:'w',s:'W'},{v:'f',s:'F'},{v:'p',s:'P'},{v:'g',s:'G'},
+        {v:'j',s:'J'},{v:'l',s:'L'},{v:'u',s:'U'},{v:'y',s:'Y'},{v:';',s:':'},
+        {v:'[',s:'{'},{v:']',s:'}'},{v:'\\',s:'|',w:1.5,cls:'mod single'}
       ],
       [
-        {v:'Bksp',k:'backspace',w:1.8,cls:'muted-text'},
-        {v:'a'},{v:'r'},{v:'s'},{v:'t'},{v:'d'},
-        {v:'h'},{v:'n'},{v:'e'},{v:'i'},{v:'o'},
-        {v:"'",s:'"'},{v:'Enter',k:'enter',w:2.3,cls:'muted-text'}
+        {v:'⌫',k:'backspace',w:1.75,cls:'mod single'},
+        {v:'a',s:'A'},{v:'r',s:'R'},{v:'s',s:'S'},{v:'t',s:'T'},{v:'d',s:'D'},
+        {v:'h',s:'H'},{v:'n',s:'N'},{v:'e',s:'E'},{v:'i',s:'I'},{v:'o',s:'O'},
+        {v:"'",s:'"'},{v:'Enter',k:'enter',w:2.35,cls:'mod single'}
       ],
       [
-        {v:'⇧',k:'shift',w:2.3,cls:'muted-text'},
-        {v:'z'},{v:'x'},{v:'c'},{v:'v'},{v:'b'},
-        {v:'k'},{v:'m'},{v:',',s:'<'},{v:'.',s:'>'},{v:'/',s:'?'},
-        {v:'⇧',k:'shift',w:2.8,cls:'muted-text'}
+        {v:'⇧',k:'shift',w:2.35,cls:'mod single'},
+        {v:'z',s:'Z'},{v:'x',s:'X'},{v:'c',s:'C'},{v:'v',s:'V'},{v:'b',s:'B'},
+        {v:'k',s:'K'},{v:'m',s:'M'},{v:',',s:'<'},{v:'.',s:'>'},{v:'/',s:'?'},
+        {v:'⇧',k:'shift',w:2.85,cls:'mod single'}
       ],
       [
-        {v:'Ctrl',k:'ctrl',w:1.35,cls:'muted-text'},
-        {v:'Alt',k:'alt',w:1.35,cls:'muted-text'},
-        {v:'',k:'space',w:6.6},
-        {v:'Alt',k:'alt',w:1.35,cls:'muted-text'},
-        {v:'Ctrl',k:'ctrl',w:1.35,cls:'muted-text'}
+        {v:'Ctrl',k:'ctrl',w:1.4,cls:'mod single'},{v:'⌘',k:'cmd',w:1.2,cls:'mod single'},
+        {v:'Alt',k:'alt',w:1.2,cls:'mod single'},
+        {v:'',k:'space',w:6.3,cls:'space-key single'},
+        {v:'Alt',k:'alt',w:1.2,cls:'mod single'},{v:'⌘',k:'cmd',w:1.2,cls:'mod single'},
+        {v:'Ctrl',k:'ctrl',w:1.4,cls:'mod single'}
       ]
-    ]
-  },
-
-  numpad: {
-    name: 'Numpad',
-    rows: [
-      [{v:'7'},{v:'8'},{v:'9'},{v:'/',s:'÷',cls:'muted-text'}],
-      [{v:'4'},{v:'5'},{v:'6'},{v:'×',k:'*',cls:'muted-text'}],
-      [{v:'1'},{v:'2'},{v:'3'},{v:'-',cls:'muted-text'}],
-      [{v:'0',w:2},{v:'.'},{v:'+',cls:'muted-text'}],
-      [{v:'⌫',k:'backspace',w:1.5,cls:'muted-text'},{v:'Enter',k:'enter',w:2.5,cls:'muted-text'}]
     ]
   }
 };
 
-// ════════════════════════════════════════════
-//  STENO LAYOUT
-//  Standard 23-key steno board layout:
-//    Row 0: # number bar (full width)
-//    Row 1: S- T- K- P- W- H-  [*]  -F -P -L -T -D
-//    Row 2:  S-       [A  O  *  E  U]       -R -B -G -S -Z
-//  (Left S- appears in both rows on real boards, split top/bottom)
-//  Gap keys are invisible spacers to align the vowel keys correctly
-// ════════════════════════════════════════════
-const STENO_DEF = {
-  name: 'Stenography',
-  numBar: {v:'# ─── Number Bar ───#', k:'#', cls:'steno-num'},
+/* ═══════════════════════════════════════════════════════
+   STENO LAYOUT DATA
+═══════════════════════════════════════════════════════ */
+const STENO = {
+  numBar: { v:'#  —  Number Bar  —  #', k:'#', cls:'sk-num single', w:1 },
   topRow: [
-    {v:'S', k:'S-',  cls:'steno-l'},
-    {v:'T', k:'T-',  cls:'steno-l'},
-    {v:'K', k:'K-',  cls:'steno-l'},
-    {v:'P', k:'P-',  cls:'steno-l'},
-    {v:'W', k:'W-',  cls:'steno-l'},
-    {v:'H', k:'H-',  cls:'steno-l'},
-    {v:'★', k:'*',   cls:'steno-star', w:0.8},
-    {v:'F', k:'-F',  cls:'steno-r'},
-    {v:'P', k:'-P',  cls:'steno-r'},
-    {v:'L', k:'-L',  cls:'steno-r'},
-    {v:'T', k:'-T',  cls:'steno-r'},
-    {v:'D', k:'-D',  cls:'steno-r'}
+    {v:'S',k:'S-',cls:'sk-l'},{v:'T',k:'T-',cls:'sk-l'},{v:'K',k:'K-',cls:'sk-l'},
+    {v:'P',k:'P-',cls:'sk-l'},{v:'W',k:'W-',cls:'sk-l'},{v:'H',k:'H-',cls:'sk-l'},
+    {v:'✦',k:'*', cls:'sk-star single',w:0.8},
+    {v:'F',k:'-F',cls:'sk-r'},{v:'P',k:'-P',cls:'sk-r'},{v:'L',k:'-L',cls:'sk-r'},
+    {v:'T',k:'-T',cls:'sk-r'},{v:'D',k:'-D',cls:'sk-r'}
   ],
-  // Bottom row: left S, gap, vowels A O * E U, gap, right consonants
-  // The gaps are visual spacers (2 units each) to align with the top row's T-K and spacing
   botRow: [
-    {v:'S', k:'S2-', cls:'steno-l'},   // second S key (same as S- logically)
-    {gap: true, w:1.2},                 // spacer aligning under T K
-    {v:'A', k:'A',  cls:'steno-v'},
-    {v:'O', k:'O',  cls:'steno-v'},
-    {v:'★', k:'*',  cls:'steno-star steno-v', w:0.8},
-    {v:'E', k:'E',  cls:'steno-v'},
-    {v:'U', k:'U',  cls:'steno-v'},
-    {gap: true, w:1.2},                 // spacer
-    {v:'R', k:'-R', cls:'steno-r'},
-    {v:'B', k:'-B', cls:'steno-r'},
-    {v:'G', k:'-G', cls:'steno-r'},
-    {v:'S', k:'-S', cls:'steno-r'},
-    {v:'Z', k:'-Z', cls:'steno-r'}
+    {v:'S',k:'S2-',cls:'sk-l'},
+    {gap:true,w:1.0},
+    {v:'A',k:'A',cls:'sk-v single'},{v:'O',k:'O',cls:'sk-v single'},
+    {v:'✦',k:'*',cls:'sk-star single',w:0.8},
+    {v:'E',k:'E',cls:'sk-v single'},{v:'U',k:'U',cls:'sk-v single'},
+    {gap:true,w:1.0},
+    {v:'R',k:'-R',cls:'sk-r'},{v:'B',k:'-B',cls:'sk-r'},{v:'G',k:'-G',cls:'sk-r'},
+    {v:'S',k:'-S',cls:'sk-r'},{v:'Z',k:'-Z',cls:'sk-r'}
   ],
   ctrlRow: [
-    {v:'⌫ Del Word',   k:'steno-delete', cls:'muted-text', w:1.4},
-    {v:'▶ Commit',     k:'steno-submit', cls:'muted-text', w:1.8},
-    {v:'Space',        k:'steno-space',  cls:'muted-text', w:1.2},
-    {v:'✕ Clear Chord',k:'steno-clear',  cls:'muted-text', w:1.8}
+    {v:'⌫ Del Word',k:'steno-delete',cls:'mod single',w:1.5},
+    {v:'▶ Commit',  k:'steno-submit',cls:'mod single',w:2},
+    {v:'Space',     k:'steno-space', cls:'space-key single',w:4},
+    {v:'✕ Clear',   k:'steno-clear', cls:'mod single',w:1.5}
   ]
 };
 
-// ════════════════════════════════════════════
-//  STATE
-// ════════════════════════════════════════════
-let curLayout = 'qwerty';
-let shiftOn   = false;
-let capsOn    = false;
-let btDevice  = null;
-let btChar    = null;
+/* ═══════════════════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════════════════ */
+let curLayout  = 'qwerty';
+let shiftOn    = false;
+let capsOn     = false;
+let btDevice   = null;
+let btChar     = null;
 const stenoSet = new Set();
 
-// ════════════════════════════════════════════
-//  BUILD HELPERS
-// ════════════════════════════════════════════
+// Timer state
+let timerDuration = 60; // seconds
+let timerRunning  = false;
+let timerInterval = null;
+let timerRemain   = 60;
+let sessionStart  = null;
+let keystrokeCount = 0;
+
+/* ═══════════════════════════════════════════════════════
+   KEY BUILDER
+═══════════════════════════════════════════════════════ */
 function makeKey(def) {
   if (def.gap) {
     const sp = document.createElement('div');
-    sp.className = 'key steno-gap';
-    sp.style.setProperty('--w', def.w || 1);
+    sp.className = 'k sk-gap';
+    sp.style.setProperty('--kw', def.w || 1);
     return sp;
   }
 
   const btn = document.createElement('button');
-  btn.style.setProperty('--w', def.w || 1);
+  btn.style.setProperty('--kw', def.w || 1);
 
-  const classes = ['key'];
-  if (def.cls) def.cls.split(' ').filter(Boolean).forEach(c => classes.push(c));
+  const classes = ['k'];
+  if (def.cls) def.cls.trim().split(/\s+/).forEach(c => c && classes.push(c));
   btn.className = classes.join(' ');
 
-  if (def.s) {
-    const top  = document.createElement('span');
-    top.className = 'sub';   top.textContent = def.s;
-    const main = document.createElement('span');
-    main.className = 'main'; main.textContent = def.v;
-    btn.append(top, main);
+  // Build label content
+  if (def.s && !def.cls?.includes('single')) {
+    // Two-label keycap: shift symbol top-left, main char bottom-right
+    const ks = document.createElement('span');
+    ks.className = 'ks'; ks.textContent = def.s;
+    const km = document.createElement('span');
+    km.className = 'km'; km.textContent = def.v;
+    btn.append(ks, km);
   } else {
-    btn.textContent = def.v !== undefined ? def.v : ' ';
+    // Single label: centered
+    const km = document.createElement('span');
+    km.className = 'km'; km.textContent = def.v !== undefined ? def.v : '';
+    btn.appendChild(km);
   }
 
-  const logicalKey = def.k !== undefined ? def.k : def.v.toLowerCase();
-  btn.dataset.k = logicalKey;
+  const lk = def.k !== undefined ? def.k : def.v.toLowerCase();
+  btn.dataset.k = lk;
   if (def.s) btn.dataset.shift = def.s;
 
   return btn;
 }
 
-function buildRow(defs) {
-  const rowEl = document.createElement('div');
-  rowEl.className = 'key-row';
-  defs.forEach(def => rowEl.appendChild(makeKey(def)));
-  return rowEl;
+function makeRow(defs, extraClass) {
+  const row = document.createElement('div');
+  row.className = 'kr' + (extraClass ? ' ' + extraClass : '');
+  defs.forEach(d => row.appendChild(makeKey(d)));
+  return row;
 }
 
-function buildKeyboard(id) {
+/* ═══════════════════════════════════════════════════════
+   KEYBOARD RENDERERS
+═══════════════════════════════════════════════════════ */
+function buildStandardKbd(id) {
   const kb = document.getElementById('keyboard');
   kb.innerHTML = '';
-  const layout = LAYOUTS[id];
-  if (!layout) return;
-  layout.rows.forEach(row => kb.appendChild(buildRow(row)));
+  kb.className = 'keyboard';
+  KBD[id].rows.forEach(row => kb.appendChild(makeRow(row)));
 }
 
 function buildSteno() {
   const kb = document.getElementById('keyboard');
   kb.innerHTML = '';
+  kb.className = 'keyboard';
 
-  // Number bar (single full-width key)
+  // Number bar
   const numRow = document.createElement('div');
-  numRow.className = 'key-row';
-  const numKey = makeKey({...STENO_DEF.numBar, w: 1});
-  numKey.style.setProperty('--w', 1); // override — will stretch via flex
-  numKey.style.flex = '1 1 0';
-  numKey.dataset.steno = '#';
-  numRow.appendChild(numKey);
+  numRow.className = 'kr';
+  const numBtn = makeKey({...STENO.numBar});
+  numBtn.style.flex = '1 0 0';
+  numBtn.dataset.steno = '#';
+  numRow.appendChild(numBtn);
   kb.appendChild(numRow);
 
   // Top consonant row
   const topRow = document.createElement('div');
-  topRow.className = 'key-row';
-  STENO_DEF.topRow.forEach(def => {
-    const btn = makeKey(def);
-    btn.dataset.steno = def.k;
+  topRow.className = 'kr';
+  STENO.topRow.forEach(d => {
+    const btn = makeKey(d);
+    btn.dataset.steno = d.k;
     topRow.appendChild(btn);
   });
   kb.appendChild(topRow);
 
-  // Bottom row (S + gap + vowels + gap + right consonants)
+  // Bottom row
   const botRow = document.createElement('div');
-  botRow.className = 'key-row';
-  STENO_DEF.botRow.forEach(def => {
-    const el = makeKey(def);
-    if (!def.gap) el.dataset.steno = def.k;
+  botRow.className = 'kr steno-bot';
+  STENO.botRow.forEach(d => {
+    const el = makeKey(d);
+    if (!d.gap) el.dataset.steno = d.k;
     botRow.appendChild(el);
   });
   kb.appendChild(botRow);
 
   // Control row
   const ctrlRow = document.createElement('div');
-  ctrlRow.className = 'key-row';
-  STENO_DEF.ctrlRow.forEach(def => {
-    const btn = makeKey(def);
-    btn.dataset.stenoCtrl = def.k;
+  ctrlRow.className = 'kr';
+  STENO.ctrlRow.forEach(d => {
+    const btn = makeKey(d);
+    btn.dataset.stenoCtrl = d.k;
     ctrlRow.appendChild(btn);
   });
   kb.appendChild(ctrlRow);
 }
 
-// ════════════════════════════════════════════
-//  PRESS HANDLER
-// ════════════════════════════════════════════
+function buildNumpad() {
+  const kb = document.getElementById('keyboard');
+  kb.innerHTML = '';
+  kb.className = 'keyboard';
+  const wrap = document.createElement('div');
+  wrap.className = 'numpad-wrap';
+  const inner = document.createElement('div');
+  inner.className = 'numpad-inner';
+  [
+    [{v:'7'},{v:'8'},{v:'9'},{v:'/',s:'÷',cls:'mod single'}],
+    [{v:'4'},{v:'5'},{v:'6'},{v:'×',k:'*',cls:'mod single'}],
+    [{v:'1'},{v:'2'},{v:'3'},{v:'-',cls:'mod single'}],
+    [{v:'0',w:2,cls:'single'},{v:'.'},{v:'+',cls:'mod single'}],
+    [{v:'⌫',k:'backspace',w:1.5,cls:'mod single'},{v:'Enter',k:'enter',w:2.5,cls:'mod single'}]
+  ].forEach(row => inner.appendChild(makeRow(row)));
+  wrap.appendChild(inner);
+  kb.appendChild(wrap);
+}
+
+/* ═══════════════════════════════════════════════════════
+   KEY PRESS HANDLER
+═══════════════════════════════════════════════════════ */
 function handlePress(btn) {
-  if (!btn || btn.disabled || btn.classList.contains('steno-gap')) return;
+  if (!btn || btn.disabled || btn.classList.contains('sk-gap')) return;
+
   playTone();
+  btn.classList.add('active','glow');
+  setTimeout(() => btn.classList.remove('active','glow'), 280);
 
-  btn.classList.add('pressed', 'glow');
-  setTimeout(() => btn.classList.remove('pressed', 'glow'), 300);
+  // Start timer on first keystroke if not already running
+  if (!timerRunning && timerRemain === timerDuration && timerRemain > 0) {
+    startTimer(true);
+  }
 
-  const output = document.getElementById('output');
-  const k = btn.dataset.k;
+  const out = document.getElementById('output');
+  const k   = btn.dataset.k;
 
-  // ── Steno chord accumulation ─────────────────
+  // ── Steno chord ──────────────────────────────────
   if (btn.dataset.steno && !btn.dataset.stenoCtrl) {
-    // S2- maps to same chord key as S-
-    const stenoKey = btn.dataset.steno === 'S2-' ? 'S-' : btn.dataset.steno;
-    stenoSet.add(stenoKey);
+    const sk = btn.dataset.steno === 'S2-' ? 'S-' : btn.dataset.steno;
+    stenoSet.add(sk);
     renderStenoChord();
+    countKeystroke();
     return;
   }
 
-  // ── Steno controls ───────────────────────────
+  // ── Steno controls ───────────────────────────────
   if (btn.dataset.stenoCtrl) {
-    if (k === 'steno-submit') {
-      if (stenoSet.size) {
-        const chord = [...stenoSet].join('+');
-        output.value += `[${chord}] `;
-        btSend(`[${chord}] `);
-        stenoSet.clear(); renderStenoChord(); updateCount();
-      }
+    if (k === 'steno-submit' && stenoSet.size) {
+      const chord = [...stenoSet].join('+');
+      out.value += `[${chord}] `;
+      btSend(`[${chord}] `);
+      stenoSet.clear(); renderStenoChord(); updateCounts();
     } else if (k === 'steno-delete') {
-      const parts = output.value.trimEnd().split(' ');
+      const parts = out.value.trimEnd().split(' ');
       parts.pop();
-      output.value = parts.length ? parts.join(' ') + ' ' : '';
-      stenoSet.clear(); renderStenoChord(); updateCount();
+      out.value = parts.length ? parts.join(' ') + ' ' : '';
+      stenoSet.clear(); renderStenoChord(); updateCounts();
     } else if (k === 'steno-space') {
-      output.value += ' '; updateCount();
+      out.value += ' '; updateCounts();
     } else if (k === 'steno-clear') {
       stenoSet.clear(); renderStenoChord();
     }
     return;
   }
 
-  // ── Regular keys ─────────────────────────────
+  // ── Regular keys ─────────────────────────────────
   if (k === 'backspace') {
-    output.value = output.value.slice(0, -1);
+    out.value = out.value.slice(0,-1);
   } else if (k === 'enter') {
-    output.value += '\n'; btSend('\n');
+    out.value += '\n'; btSend('\n');
   } else if (k === 'tab') {
-    output.value += '\t';
+    out.value += '\t';
   } else if (k === 'space') {
-    output.value += ' '; btSend(' ');
+    out.value += ' '; btSend(' ');
   } else if (k === 'caps') {
     capsOn = !capsOn;
     document.getElementById('dotCaps').classList.toggle('on', capsOn);
     return;
   } else if (k === 'shift') {
     setShift(!shiftOn); return;
-  } else if (k === 'ctrl' || k === 'alt') {
+  } else if (['ctrl','alt','cmd'].includes(k)) {
     return;
-  } else {
+  } else if (k.length === 1 || (k === '*' || k === '+' || k === '-')) {
     let ch;
-    if (shiftOn && btn.dataset.shift) {
-      ch = btn.dataset.shift;
-    } else if (shiftOn && /^[a-z]$/.test(k)) {
-      ch = k.toUpperCase();
-    } else if (!shiftOn && capsOn && /^[a-z]$/.test(k)) {
-      ch = k.toUpperCase();
-    } else {
-      ch = k.length === 1 ? k : '';
-    }
-    if (ch) { output.value += ch; btSend(ch); }
+    if (shiftOn && btn.dataset.shift)        ch = btn.dataset.shift;
+    else if (shiftOn && /^[a-z]$/.test(k))   ch = k.toUpperCase();
+    else if (!shiftOn && capsOn && /^[a-z]$/.test(k)) ch = k.toUpperCase();
+    else                                      ch = k;
+    out.value += ch; btSend(ch);
     if (shiftOn) setShift(false);
   }
 
-  updateCount();
+  countKeystroke();
+  updateCounts();
 }
 
-// ════════════════════════════════════════════
-//  HELPERS
-// ════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════
+   TIMER
+═══════════════════════════════════════════════════════ */
+function startTimer(auto) {
+  if (timerRunning) return;
+  if (timerRemain <= 0) timerRemain = timerDuration;
+  timerRunning = true;
+  sessionStart = Date.now();
+  document.getElementById('timerStartBtn').textContent = '⏸ Pause';
+  document.getElementById('dotTimer').classList.add('on');
+  document.getElementById('lblTimer').textContent = 'Timer: Running';
+
+  timerInterval = setInterval(() => {
+    timerRemain--;
+    updateTimerDisplay();
+    updateLiveStats();
+    if (timerRemain <= 0) {
+      clearInterval(timerInterval);
+      timerRunning = false;
+      timerRemain = 0;
+      updateTimerDisplay();
+      showScoreModal();
+    }
+  }, 1000);
+}
+
+function pauseTimer() {
+  clearInterval(timerInterval);
+  timerRunning = false;
+  document.getElementById('timerStartBtn').textContent = '▶ Resume';
+  document.getElementById('dotTimer').classList.remove('on');
+  document.getElementById('lblTimer').textContent = 'Timer: Paused';
+}
+
+function resetTimer() {
+  clearInterval(timerInterval);
+  timerRunning = false;
+  timerRemain  = timerDuration;
+  keystrokeCount = 0;
+  sessionStart = null;
+  updateTimerDisplay();
+  updateLiveStats();
+  document.getElementById('timerStartBtn').textContent = '▶ Start';
+  document.getElementById('dotTimer').classList.remove('on');
+  document.getElementById('lblTimer').textContent = 'Timer: Ready';
+}
+
+function updateTimerDisplay() {
+  const el = document.getElementById('timerDisplay');
+  const m = Math.floor(timerRemain / 60);
+  const s = timerRemain % 60;
+  el.textContent = `${m}:${s.toString().padStart(2,'0')}`;
+  el.classList.toggle('warn', timerRemain <= 10 && timerRemain > 0);
+}
+
+function countKeystroke() { keystrokeCount++; }
+
+function calcStats() {
+  const out    = document.getElementById('output').value;
+  const chars  = out.length;
+  const words  = out.trim() ? out.trim().split(/\s+/).filter(Boolean).length : 0;
+  const elapsed = sessionStart ? Math.max(1, (Date.now() - sessionStart) / 1000) : 1;
+  const minutes = elapsed / 60;
+  const wpm    = timerRunning || sessionStart ? Math.round(words / minutes) : 0;
+  const kps    = sessionStart ? (keystrokeCount / elapsed).toFixed(1) : '0.0';
+  return { chars, words, wpm, kps, elapsed, keystrokes: keystrokeCount };
+}
+
+function updateCounts() {
+  const s = calcStats();
+  document.getElementById('charCount').textContent  = `${s.chars} chars`;
+  document.getElementById('statChars').textContent  = s.chars;
+  document.getElementById('statWords').textContent  = s.words;
+  document.getElementById('statKeys').textContent   = s.keystrokes;
+  if (timerRunning) {
+    document.getElementById('statWpm').textContent = s.wpm;
+    document.getElementById('wpmLive').textContent = `${s.wpm} WPM`;
+  }
+}
+
+function updateLiveStats() { updateCounts(); }
+
+function showScoreModal() {
+  const s = calcStats();
+  const elapsed = timerDuration; // full session
+
+  // Grade
+  let grade, msg, color;
+  if (s.wpm >= 80)      { grade='S'; msg='Exceptional speed! Professional-level typing.'; color='hi'; }
+  else if (s.wpm >= 60) { grade='A'; msg='Excellent! You\'re faster than 90% of typists.'; color='hi'; }
+  else if (s.wpm >= 45) { grade='B'; msg='Great speed. Above average with room to grow.'; color='green'; }
+  else if (s.wpm >= 30) { grade='C'; msg='Solid typing. Keep practicing for better flow.'; color=''; }
+  else if (s.wpm >= 15) { grade='D'; msg='Getting there! Focus on accuracy and rhythm.'; color='warn'; }
+  else                  { grade='F'; msg='Just starting out — every keystroke counts!'; color='warn'; }
+
+  document.getElementById('scoreGrade').textContent = grade;
+  document.getElementById('scoreGrade').style.color = grade === 'S' || grade === 'A' ? 'var(--accent)'
+    : grade === 'B' ? 'var(--accent3)'
+    : grade === 'C' ? 'var(--text)'
+    : 'var(--danger)';
+  document.getElementById('scoreMsg').textContent   = msg;
+  document.getElementById('sc-wpm').textContent     = s.wpm;
+  document.getElementById('sc-chars').textContent   = s.chars;
+  document.getElementById('sc-words').textContent   = s.words;
+  document.getElementById('sc-keys').textContent    = s.keystrokes;
+  document.getElementById('sc-kps').textContent     = s.kps;
+
+  // Bar fill: max 120 WPM = 100%
+  setTimeout(() => {
+    document.getElementById('sc-bar').style.width = Math.min(100, (s.wpm / 120) * 100) + '%';
+  }, 100);
+
+  document.getElementById('scoreOverlay').classList.add('open');
+  document.getElementById('dotTimer').classList.remove('on');
+  document.getElementById('lblTimer').textContent = 'Timer: Done';
+}
+
+/* ═══════════════════════════════════════════════════════
+   HELPERS
+═══════════════════════════════════════════════════════ */
 function setShift(on) {
   shiftOn = on;
   document.getElementById('dotShift').classList.toggle('on', on);
   document.getElementById('shiftBtn').classList.toggle('active', on);
-}
-
-function updateCount() {
-  const v = document.getElementById('output').value;
-  document.getElementById('charCount').textContent = `${v.length} char${v.length !== 1 ? 's' : ''}`;
+  document.getElementById('lblShift').textContent = on ? 'Shift ●' : 'Shift';
 }
 
 function renderStenoChord() {
@@ -799,119 +1323,137 @@ function renderStenoChord() {
 
 function setLayout(id) {
   curLayout = id;
-  document.querySelectorAll('.layout-tab').forEach(t =>
-    t.classList.toggle('active', t.dataset.layout === id)
-  );
-  const name = id === 'steno' ? 'Stenography' : (LAYOUTS[id] || {name: id}).name;
-  document.getElementById('layoutLabel').textContent = name;
+  document.querySelectorAll('.ltab').forEach(t => t.classList.toggle('active', t.dataset.layout===id));
+  const name = KBD[id]?.name || 'Stenography';
+  document.getElementById('lblLayout').textContent = name;
   document.getElementById('stenoChord').style.display = 'none';
   stenoSet.clear();
-  id === 'steno' ? buildSteno() : buildKeyboard(id);
+  if (id === 'steno')  buildSteno();
+  else if (id === 'numpad') buildNumpad();
+  else buildStandardKbd(id);
 }
 
-// ════════════════════════════════════════════
-//  BLUETOOTH
-// ════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════
+   BLUETOOTH
+═══════════════════════════════════════════════════════ */
 async function connectBT() {
-  if (!navigator.bluetooth) {
-    alert('Web Bluetooth requires Chrome or Edge on a supported platform.');
-    return;
-  }
+  if (!navigator.bluetooth) { alert('Web Bluetooth requires Chrome or Edge.'); return; }
   try {
     btDevice = await navigator.bluetooth.requestDevice({
       acceptAllDevices: true,
       optionalServices: ['human_interface_device']
     });
     btDevice.addEventListener('gattserverdisconnected', () => {
-      btDevice = null; btChar = null; setBTStatus(false);
+      btDevice = btChar = null; setBTStatus(false);
     });
     const server = await btDevice.gatt.connect();
     setBTStatus(true, btDevice.name);
     try {
-      const svc   = await server.getPrimaryService('human_interface_device');
+      const svc = await server.getPrimaryService('human_interface_device');
       const chars = await svc.getCharacteristics();
       btChar = chars.find(c => c.properties.writeWithoutResponse || c.properties.write) || null;
-    } catch(e) {
-      console.info('HID service not exposed by this device (normal):', e.message);
-    }
-  } catch(e) {
-    if (e.name !== 'NotFoundError') console.error(e);
-  }
+    } catch(e) { console.info('HID not accessible (normal):', e.message); }
+  } catch(e) { if (e.name !== 'NotFoundError') console.error(e); }
 }
 
 async function btSend(text) {
   if (!btChar) return;
   try { await btChar.writeValue(new TextEncoder().encode(text)); }
-  catch(e) { console.warn('BT write failed:', e.message); }
+  catch(e) { console.warn('BT write:', e.message); }
 }
 
-function setBTStatus(on, name = '') {
-  document.getElementById('dotBT').classList.toggle('on', on);
-  document.getElementById('btDot').classList.toggle('on', on);
-  document.getElementById('btLabel').textContent = on ? `BT: ${name || 'Connected'}` : 'Bluetooth: Off';
+function setBTStatus(on, name='') {
+  ['btDot','dotBT2'].forEach(id => document.getElementById(id).classList.toggle('on',on));
+  document.getElementById('lblBT').textContent = on ? `BT: ${name||'Connected'}` : 'Bluetooth: Off';
 }
 
-// ════════════════════════════════════════════
-//  EVENT WIRING
-// ════════════════════════════════════════════
-document.getElementById('keyboard').addEventListener('click', e => {
-  const btn = e.target.closest('.key');
-  if (btn) handlePress(btn);
-});
+/* ═══════════════════════════════════════════════════════
+   EVENT WIRING
+═══════════════════════════════════════════════════════ */
+// Keyboard click/touch
+const kb = document.getElementById('keyboard');
+kb.addEventListener('click', e => { const b = e.target.closest('.k'); if(b) handlePress(b); });
+kb.addEventListener('touchstart', e => {
+  const b = e.target.closest('.k');
+  if (b) { e.preventDefault(); handlePress(b); }
+}, { passive:false });
 
-// Touch: prevent double-tap zoom, handle press directly
-document.getElementById('keyboard').addEventListener('touchstart', e => {
-  const btn = e.target.closest('.key');
-  if (btn) { e.preventDefault(); handlePress(btn); }
-}, { passive: false });
+// Layout tabs
+document.querySelectorAll('.ltab').forEach(t => t.addEventListener('click', () => setLayout(t.dataset.layout)));
 
-document.querySelectorAll('.layout-tab').forEach(t =>
-  t.addEventListener('click', () => setLayout(t.dataset.layout))
-);
-
+// Header buttons
 document.getElementById('shiftBtn').addEventListener('click', () => setShift(!shiftOn));
-
 document.getElementById('clearBtn').addEventListener('click', () => {
   document.getElementById('output').value = '';
-  updateCount(); stenoSet.clear(); renderStenoChord();
+  updateCounts(); stenoSet.clear(); renderStenoChord();
 });
-
 document.getElementById('copyBtn').addEventListener('click', () => {
   navigator.clipboard.writeText(document.getElementById('output').value).then(() => {
     const b = document.getElementById('copyBtn');
-    b.textContent = 'Copied!';
-    setTimeout(() => b.textContent = 'Copy', 1500);
+    b.textContent='Copied!'; setTimeout(()=>b.textContent='Copy',1600);
   });
 });
 
-document.getElementById('btBtn').addEventListener('click', () =>
-  document.getElementById('btModal').classList.add('open')
-);
-document.getElementById('btClose').addEventListener('click', () =>
-  document.getElementById('btModal').classList.remove('open')
-);
-document.getElementById('btConnect').addEventListener('click', () => {
-  document.getElementById('btModal').classList.remove('open');
-  connectBT();
+// BT
+document.getElementById('btBtn').addEventListener('click', () => document.getElementById('btOverlay').classList.add('open'));
+document.getElementById('btClose').addEventListener('click', () => document.getElementById('btOverlay').classList.remove('open'));
+document.getElementById('btConnect').addEventListener('click', () => { document.getElementById('btOverlay').classList.remove('open'); connectBT(); });
+
+// Timer controls
+document.getElementById('timerStartBtn').addEventListener('click', () => {
+  if (timerRunning) pauseTimer();
+  else startTimer(false);
+});
+document.getElementById('timerResetBtn').addEventListener('click', resetTimer);
+
+// Duration chips
+document.querySelectorAll('[data-dur]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (timerRunning) return;
+    timerDuration = +btn.dataset.dur;
+    timerRemain   = timerDuration;
+    updateTimerDisplay();
+    document.querySelectorAll('[data-dur]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
 });
 
-document.getElementById('output').addEventListener('input', updateCount);
+// Score modal
+document.getElementById('scoreClose').addEventListener('click', () => {
+  document.getElementById('scoreOverlay').classList.remove('open');
+  resetTimer();
+  document.getElementById('output').value = '';
+  updateCounts();
+});
+document.getElementById('scoreCopy').addEventListener('click', () => {
+  const s = calcStats();
+  const text = `KeyFlow Session Report\nWPM: ${s.wpm}\nChars: ${s.chars}\nWords: ${s.words}\nKeystrokes: ${s.keystrokes}\nKeys/sec: ${s.kps}`;
+  navigator.clipboard.writeText(text);
+});
 
-// Physical keyboard passthrough (when output textarea not focused)
+// Theme swatches
+document.querySelectorAll('.theme-swatch').forEach(sw => {
+  sw.addEventListener('click', () => {
+    document.body.setAttribute('data-theme', sw.dataset.t);
+    document.querySelectorAll('.theme-swatch').forEach(s => s.classList.remove('active'));
+    sw.classList.add('active');
+  });
+});
+
+// Physical keyboard passthrough
 document.addEventListener('keydown', e => {
   if (document.activeElement === document.getElementById('output')) return;
-  const k = e.key === ' ' ? 'space'
-          : e.key === 'Enter' ? 'enter'
-          : e.key === 'Backspace' ? 'backspace'
-          : e.key === 'Tab' ? 'tab'
-          : e.key === 'CapsLock' ? 'caps'
-          : e.key === 'Shift' ? 'shift'
-          : e.key.toLowerCase();
-  const btn = document.querySelector(`.key[data-k="${CSS.escape(k)}"]`);
+  const map = { ' ':'space', 'Enter':'enter', 'Backspace':'backspace', 'Tab':'tab', 'CapsLock':'caps', 'Shift':'shift' };
+  const k = map[e.key] || e.key.toLowerCase();
+  const btn = document.querySelector(`.k[data-k="${CSS.escape(k)}"]`);
   if (btn) { handlePress(btn); e.preventDefault(); }
 });
 
-// ── Init ──────────────────────────────────────
+// Output direct typing should also count
+document.getElementById('output').addEventListener('input', updateCounts);
+
+/* ── INIT ── */
+updateTimerDisplay();
 setLayout('qwerty');
 </script>
 
