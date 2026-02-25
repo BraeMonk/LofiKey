@@ -10,463 +10,327 @@
 <title>KeyFlow</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root, [data-theme="midnight"] {
-  --bg:#10121a;--bg2:#181c28;--panel:#1e2235;--panel2:#252a3d;
-  --border:#313654;--border2:#404870;--text:#e2e6f5;--text2:#8b92b5;--text3:#565d82;
-  --accent:#5e9ff2;--accent2:#9b87f5;--accent3:#4ecfa0;--danger:#f07070;
-  --key-face:#252a3d;--key-side:#161929;--key-border:#363d5e;--key-text:#c8ceea;
-  --key-text2:#6b74a0;--key-hover:#2e344f;--key-active:#1a1e2d;--key-accent:#2a3060;
-  --key-shadow:0 4px 0 var(--key-side),0 5px 12px rgba(0,0,0,.55);
-  --key-pressed:0 1px 0 var(--key-side);--glow-color:rgba(94,159,242,.25);
-}
-[data-theme="slate"] {
-  --bg:#f0f2f5;--bg2:#e6e9ef;--panel:#fff;--panel2:#f5f6fa;
-  --border:#d0d5e2;--border2:#b0b8cc;--text:#1a1d2e;--text2:#6b7394;--text3:#9ba3be;
-  --accent:#3b6fd4;--accent2:#7c5fdb;--accent3:#1aab76;--danger:#e05050;
-  --key-face:#fff;--key-side:#c0c8da;--key-border:#d5dae8;--key-text:#2a2f45;
-  --key-text2:#8b93b0;--key-hover:#f0f3fc;--key-active:#e8ecf8;--key-accent:#e8edf8;
-  --key-shadow:0 3px 0 var(--key-side),0 4px 10px rgba(0,0,0,.12);
-  --key-pressed:0 1px 0 var(--key-side);--glow-color:rgba(59,111,212,.2);
-}
-[data-theme="ember"] {
-  --bg:#12100e;--bg2:#1a1714;--panel:#211e1a;--panel2:#2a2620;
-  --border:#3d3628;--border2:#554e38;--text:#f0e8d8;--text2:#9a8c72;--text3:#5e5440;
-  --accent:#e89040;--accent2:#e05850;--accent3:#70c878;--danger:#e05050;
-  --key-face:#2a2620;--key-side:#141210;--key-border:#3d3628;--key-text:#e0d4bc;
-  --key-text2:#7a6e58;--key-hover:#342e26;--key-active:#1e1c18;--key-accent:#3a3020;
-  --key-shadow:0 4px 0 var(--key-side),0 5px 14px rgba(0,0,0,.6);
-  --key-pressed:0 1px 0 var(--key-side);--glow-color:rgba(232,144,64,.25);
-}
-[data-theme="arctic"] {
-  --bg:#f8fbff;--bg2:#eef4fc;--panel:#fff;--panel2:#f2f7fe;
-  --border:#c8d8ee;--border2:#a8c0e0;--text:#1c2840;--text2:#5a7298;--text3:#92aac4;
-  --accent:#0077cc;--accent2:#5544cc;--accent3:#009977;--danger:#cc4444;
-  --key-face:#fff;--key-side:#a8bcd4;--key-border:#c0d4ec;--key-text:#1c2840;
-  --key-text2:#6888aa;--key-hover:#f0f6ff;--key-active:#e4effc;--key-accent:#e0eeff;
-  --key-shadow:0 3px 0 var(--key-side),0 4px 12px rgba(0,60,120,.14);
-  --key-pressed:0 1px 0 var(--key-side);--glow-color:rgba(0,119,204,.2);
-}
-[data-theme="noir"] {
-  --bg:#050506;--bg2:#0d0d0f;--panel:#111114;--panel2:#18181c;
-  --border:#252528;--border2:#333338;--text:#e8e8ec;--text2:#707078;--text3:#404048;
-  --accent:#c0c0cc;--accent2:#888898;--accent3:#60e0a0;--danger:#e04040;
-  --key-face:#1a1a1e;--key-side:#040405;--key-border:#2a2a30;--key-text:#d0d0d8;
-  --key-text2:#505058;--key-hover:#222228;--key-active:#0e0e12;--key-accent:#202028;
-  --key-shadow:0 4px 0 var(--key-side),0 6px 16px rgba(0,0,0,.8);
-  --key-pressed:0 1px 0 var(--key-side);--glow-color:rgba(192,192,204,.15);
+/* ============================= */
+/* ROOT VARIABLES */
+/* ============================= */
+
+:root {
+  --bg: #0f1115;
+  --panel: #1a1d24;
+  --panel-2: #222631;
+  --accent: #4cc9f0;
+  --accent-2: #80ffdb;
+  --text: #e6e9ef;
+  --muted: #9aa3b2;
+  --danger: #ff4d6d;
+  --border: #2c3240;
+
+  --radius: 12px;
+  --spacing: 16px;
+  --transition: 0.2s ease;
 }
 
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+/* ============================= */
+/* GLOBAL RESET */
+/* ============================= */
 
-/* ── iOS/Safari resets ── */
-html{
-font-size:16px;
-/* Prevent iOS font size inflation when rotating */
--webkit-text-size-adjust:100%;
-text-size-adjust:100%;
-/* Fill the whole screen including notch areas */
-height:100%;
-}
-body{
-background:var(–bg);color:var(–text);
-font-family:‘IBM Plex Mono’,monospace;
-min-height:100dvh;
-/* Fallback for browsers without dvh support (older iOS) */
-min-height:-webkit-fill-available;
-display:flex;flex-direction:column;
-overflow-x:hidden;transition:background .3s,color .3s;
-/* Safe area insets for notch/home bar */
-padding-bottom:env(safe-area-inset-bottom);
-padding-left:env(safe-area-inset-left);
-padding-right:env(safe-area-inset-right);
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* Prevent iOS callout on long-press and iOS highlight flash */
-button,select,input{
--webkit-touch-callout:none;
--webkit-tap-highlight-color:transparent;
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Syne', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
-/* iOS adds rounded corners + shadow to textareas — strip it */
-textarea{
--webkit-appearance:none;
-appearance:none;
-border-radius:0;
+body {
+  overscroll-behavior: none;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-/* iOS select styling reset */
-select{
--webkit-appearance:none;
-appearance:none;
-background-image:none;
+/* ============================= */
+/* LAYOUT WRAPPER */
+/* ============================= */
+
+main {
+  flex: 1;
+  width: 100%;
+  padding: var(--spacing);
+  padding-bottom: calc(var(--spacing) + env(safe-area-inset-bottom));
+
+  max-width: 1100px;
+  margin: 0 auto;
 }
 
-/* iOS range input needs special handling */
-input[type=range]{
--webkit-appearance:none;
-appearance:none;
-cursor:pointer;
+/* ============================= */
+/* HEADER */
+/* ============================= */
+
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+
+  padding-top: env(safe-area-inset-top);
+  height: calc(60px + env(safe-area-inset-top));
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: var(--spacing);
+  padding-right: var(--spacing);
 }
 
-/* Prevent double-tap zoom on buttons across iOS */
-button{
-touch-action:manipulation;
--webkit-user-select:none;
-user-select:none;
-cursor:pointer;
+/* ============================= */
+/* PANELS */
+/* ============================= */
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--spacing);
+  margin-bottom: var(--spacing);
 }
 
-/* ── HEADER ── */
-.app-header{
-background:var(–panel);border-bottom:1px solid var(–border);
-/* Add safe area padding at top for notch */
-padding:0 calc(1.25rem + env(safe-area-inset-right)) 0 calc(1.25rem + env(safe-area-inset-left));
-display:flex;align-items:center;
-justify-content:space-between;
-/* Height accounts for status bar on iOS */
-height:56px;
-padding-top:env(safe-area-inset-top);
-height:calc(56px + env(safe-area-inset-top));
-flex-shrink:0;gap:.75rem;
-position:sticky;top:0;z-index:50;
-}
-.logo{font-family:‘Syne’,sans-serif;font-weight:800;font-size:1.2rem;color:var(–accent);letter-spacing:-.02em;white-space:nowrap;flex-shrink:0}
-.logo span{color:var(–text)}
-.header-center{display:flex;align-items:center;gap:.5rem;flex:1;justify-content:center;min-width:0}
-.header-right{display:flex;align-items:center;gap:.4rem;flex-shrink:0}
-
-/* ── CHIPS ── */
-.chip{
-display:inline-flex;align-items:center;gap:.3rem;
-padding:.3rem .65rem;border-radius:20px;border:1px solid var(–border);
-background:var(–panel2);color:var(–text2);
-font-family:‘IBM Plex Mono’,monospace;font-size:.68rem;
-cursor:pointer;white-space:nowrap;transition:all .15s;letter-spacing:.04em;
--webkit-appearance:none;appearance:none;
--webkit-tap-highlight-color:transparent;
-touch-action:manipulation;
-}
-.chip.active{background:var(–accent);border-color:var(–accent);color:#fff}
-.chip.danger{border-color:var(–danger);color:var(–danger)}
-
-/* ── SOUND ── */
-.sound-row{display:flex;align-items:center;gap:.4rem}
-.sound-row label{font-size:.65rem;color:var(–text3)}
-input[type=range]{
--webkit-appearance:none;appearance:none;
-width:68px;height:3px;background:var(–border);border-radius:2px;cursor:pointer;
-/* iOS needs explicit height on the track */
-vertical-align:middle;
-}
-input[type=range]::-webkit-slider-runnable-track{
-height:3px;background:var(–border);border-radius:2px;
-}
-input[type=range]::-webkit-slider-thumb{
--webkit-appearance:none;width:18px;height:18px;
-border-radius:50%;background:var(–accent);cursor:pointer;
-/* iOS thumb needs explicit margin to center on track */
-margin-top:-7.5px;
-/* Larger touch target on mobile */
-box-shadow:0 0 0 6px transparent;
-}
-input[type=range]::-moz-range-thumb{
-width:12px;height:12px;border-radius:50%;background:var(–accent);cursor:pointer;border:none;
-}
-select.chip{cursor:pointer;-webkit-appearance:none;appearance:none;}
-
-/* ── THEME SWATCHES (header, inline) ── */
-.theme-inline{display:flex;align-items:center;gap:6px;border-right:1px solid var(–border);padding-right:10px;margin-right:4px}
-.theme-swatch{
-width:20px;height:20px;border-radius:50%;border:2px solid transparent;
-cursor:pointer;transition:all .15s;flex-shrink:0;position:relative;
--webkit-tap-highlight-color:transparent;touch-action:manipulation;
-}
-.theme-swatch.active{border-color:var(–text);transform:scale(1.2)}
-.theme-swatch.active::after{content:’’;position:absolute;inset:2px;border-radius:50%;border:2px solid rgba(255,255,255,.5)}
-.swatch-midnight{background:conic-gradient(from 135deg,#252a3d 50%,#5e9ff2 50%)}
-.swatch-slate{background:conic-gradient(from 135deg,#fff 50%,#3b6fd4 50%);border-color:#d0d5e2!important}
-.swatch-ember{background:conic-gradient(from 135deg,#2a2620 50%,#e89040 50%)}
-.swatch-arctic{background:conic-gradient(from 135deg,#eef4fc 50%,#0077cc 50%)}
-.swatch-noir{background:conic-gradient(from 135deg,#111114 50%,#c0c0cc 50%)}
-
-/* ── MOBILE MENU TOGGLE ── */
-.menu-toggle{
-display:none;align-items:center;justify-content:center;
-width:34px;height:34px;border-radius:8px;border:1px solid var(–border);
-background:var(–panel2);color:var(–text2);cursor:pointer;
-font-size:1rem;flex-shrink:0;transition:all .15s;
--webkit-appearance:none;appearance:none;
--webkit-tap-highlight-color:transparent;touch-action:manipulation;
+.panel-2 {
+  background: var(--panel-2);
 }
 
-/* ── MOBILE DRAWER ── */
-.mobile-drawer{display:none;position:fixed;inset:0;z-index:100}
-.mobile-drawer.open{display:block}
-.drawer-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(4px)}
-.drawer-panel{
-position:absolute;top:0;right:0;
-width:min(320px,90vw);height:100%;
-background:var(–panel);border-left:1px solid var(–border);
-padding:1.25rem;
-padding-top:calc(1.25rem + env(safe-area-inset-top));
-padding-bottom:calc(1.25rem + env(safe-area-inset-bottom));
-padding-right:calc(1.25rem + env(safe-area-inset-right));
-overflow-y:auto;
--webkit-overflow-scrolling:touch;
-display:flex;flex-direction:column;gap:1.5rem;
-transform:translateX(100%);
-transition:transform .25s cubic-bezier(.4,0,.2,1)
-}
-.mobile-drawer.open .drawer-panel{transform:translateX(0)}
-.drawer-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.25rem}
-.drawer-close-btn{
-width:30px;height:30px;border-radius:6px;border:1px solid var(–border);
-background:var(–panel2);color:var(–text2);font-size:.9rem;
-cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;
--webkit-appearance:none;appearance:none;
--webkit-tap-highlight-color:transparent;touch-action:manipulation;
-}
-.drawer-section-title{font-size:.58rem;color:var(–text3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.65rem;font-weight:500}
+/* ============================= */
+/* FLEX + GRID UTILITIES */
+/* ============================= */
 
-/* ── THEME GRID (drawer) ── */
-.theme-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:.5rem}
-.theme-card{
-border-radius:10px;border:2px solid var(–border);padding:.65rem .5rem .55rem;
-cursor:pointer;transition:all .15s;background:var(–panel2);
-display:flex;flex-direction:column;align-items:center;gap:.4rem;
--webkit-tap-highlight-color:transparent;touch-action:manipulation;
-}
-.theme-card.active{border-color:var(–accent);background:var(–bg2)}
-.theme-card.active .theme-check{opacity:1}
-.theme-preview{width:100%;height:34px;border-radius:5px;position:relative;overflow:hidden;flex-shrink:0}
-.tp-bg{position:absolute;inset:0}
-.tp-key{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:26px;height:14px;border-radius:3px;border-bottom:2px solid rgba(0,0,0,.3)}
-.tp-dot{position:absolute;top:5px;right:6px;width:6px;height:6px;border-radius:50%}
-.theme-card-label{font-size:.6rem;color:var(–text2);letter-spacing:.08em;text-transform:uppercase;font-weight:500}
-.theme-card.active .theme-card-label{color:var(–accent)}
-.theme-check{width:14px;height:14px;border-radius:50%;background:var(–accent);display:flex;align-items:center;justify-content:center;opacity:0;font-size:.5rem;color:#fff}
-
-/* ── LAYOUT TABS ── */
-.layout-tabs{
-background:var(–panel);border-bottom:1px solid var(–border);
-padding:0 1.25rem;display:flex;align-items:center;
-overflow-x:auto;scrollbar-width:none;flex-shrink:0
-}
-.layout-tabs::-webkit-scrollbar{display:none}
-.ltab{
-padding:.6rem .9rem;font-family:‘IBM Plex Mono’,monospace;
-font-size:.7rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;
-color:var(–text3);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;
-white-space:nowrap;border-top:none;border-left:none;border-right:none;background:transparent;
--webkit-appearance:none;appearance:none;
--webkit-tap-highlight-color:transparent;touch-action:manipulation;
-}
-.ltab.active{color:var(–accent);border-bottom-color:var(–accent)}
-
-/* ── MAIN ── */
-.app-body{
-flex:1;display:flex;flex-direction:column;align-items:center;
-padding:1rem 1rem 1.5rem;gap:.85rem;min-height:0
+.flex {
+  display: flex;
+  gap: var(--spacing);
+  flex-wrap: wrap;
 }
 
-/* ── TOP ROW ── */
-.top-row{width:100%;max-width:1040px;display:grid;grid-template-columns:1fr 200px;gap:.85rem;align-items:start}
-.output-card{background:var(–panel);border:1px solid var(–border);border-radius:10px;overflow:hidden}
-.output-bar{
-display:flex;justify-content:space-between;align-items:center;
-padding:.4rem .85rem;border-bottom:1px solid var(–border);
-font-size:.65rem;color:var(–text3);letter-spacing:.08em;text-transform:uppercase
-}
-.output-bar-right{display:flex;align-items:center;gap:.5rem}
-textarea#output{
-width:100%;min-height:80px;max-height:180px;
-background:transparent;border:none;outline:none;resize:vertical;
-color:var(–text);font-family:‘IBM Plex Mono’,monospace;
-/* CRITICAL: font-size must be ≥16px on iOS or the viewport zooms in on focus */
-font-size:16px;
-line-height:1.65;
-padding:.7rem .85rem;caret-color:var(–accent);
--webkit-appearance:none;appearance:none;
-/* Prevent iOS from adding rounded corners / inner shadow */
-border-radius:0;
-/* Prevent iOS scroll bounce inside textarea */
--webkit-overflow-scrolling:touch;
+.grid {
+  display: grid;
+  gap: var(--spacing);
 }
 
-/* ── STATS ── */
-.stats-card{
-background:var(–panel);border:1px solid var(–border);border-radius:10px;
-padding:.75rem .85rem;display:flex;flex-direction:column;gap:.5rem
-}
-.stat-row{display:flex;justify-content:space-between;align-items:baseline;gap:.5rem}
-.stat-label{font-size:.58rem;color:var(–text3);letter-spacing:.1em;text-transform:uppercase}
-.stat-val{font-size:1rem;font-weight:600;color:var(–text);font-family:‘Syne’,sans-serif}
-.stat-val.accent{color:var(–accent)}
-.stat-val.green{color:var(–accent3)}
-.stat-divider{height:1px;background:var(–border)}
-.timer-display{
-font-family:‘Syne’,sans-serif;font-weight:700;font-size:1.5rem;
-color:var(–accent);text-align:center;letter-spacing:.04em;line-height:1
-}
-.timer-display.warn{color:var(–danger);animation:pulse .6s ease-in-out infinite alternate}
-@keyframes pulse{to{opacity:.5}}
-.timer-controls{display:flex;gap:.35rem;justify-content:center}
-.dur-chips{display:flex;gap:.3rem;justify-content:center;flex-wrap:wrap}
-
-/* ── KEYBOARD ── */
-.kb-wrap{width:100%;max-width:1040px}
-.keyboard{
-background:var(–bg2);border:1px solid var(–border);border-radius:14px;
-padding:12px 12px 16px;
-box-shadow:0 0 0 1px var(–border2) inset,0 24px 48px rgba(0,0,0,.35),0 2px 0 rgba(255,255,255,.04) inset;
-display:flex;flex-direction:column;gap:5px
-}
-.kr{display:flex;gap:4px;width:100%;flex-wrap:nowrap}
-.k{
-flex:var(–kw,1) 0 0;min-width:0;
-height:clamp(34px,4.5vw,52px);
-background:var(–key-face);border:1px solid var(–key-border);border-radius:5px;
-box-shadow:var(–key-shadow);color:var(–key-text);
-font-family:‘IBM Plex Mono’,monospace;font-size:clamp(8px,1vw,12px);font-weight:400;
-display:flex;flex-direction:column;align-items:center;justify-content:center;
-position:relative;cursor:pointer;
--webkit-user-select:none;user-select:none;
--webkit-tap-highlight-color:transparent;
-/* manipulation: disables double-tap zoom, allows immediate response */
-touch-action:manipulation;
-/* Prevent iOS callout popup (copy/define) on long press */
--webkit-touch-callout:none;
-transition:background .07s,box-shadow .07s,transform .05s;
-outline:none;line-height:1.1;padding:2px 3px;
-/* Prevent iOS from applying button defaults */
--webkit-appearance:none;appearance:none;
-border-style:solid;
-}
-.k .ks{position:absolute;top:3px;left:5px;font-size:clamp(6px,.72vw,9px);color:var(–key-text2);line-height:1}
-.k .km{position:absolute;bottom:3px;right:5px;font-size:clamp(8px,.95vw,12px);color:var(–key-text);line-height:1}
-.k.single{justify-content:center;align-items:center}
-.k.single .km{position:static;font-size:clamp(7px,.85vw,11px);color:var(–key-text2)}
-/* Only apply hover on devices that support true hover (not touch screens) */
-@media(hover:hover){
-.k:hover{background:var(–key-hover);border-color:var(–border2)}
-.chip:hover{border-color:var(–accent);color:var(–accent);background:var(–panel)}
-.chip.danger:hover{background:var(–danger);color:#fff}
-.theme-swatch:hover{border-color:var(–text);transform:scale(1.2)}
-.theme-card:hover{border-color:var(–accent);transform:translateY(-2px)}
-.menu-toggle:hover{border-color:var(–accent);color:var(–accent)}
-.drawer-close-btn:hover{border-color:var(–accent);color:var(–accent)}
-.ltab:hover{color:var(–text2)}
-}
-.k.active,.k:active{background:var(–key-active);box-shadow:var(–key-pressed);transform:translateY(3px)}
-@keyframes kglow{
-0%{box-shadow:var(–key-pressed),0 0 0 0 var(–glow-color)}
-50%{box-shadow:var(–key-pressed),0 0 14px 6px var(–glow-color)}
-100%{box-shadow:var(–key-shadow),0 0 0 0 transparent}
-}
-.k.glow{animation:kglow .4s ease-out forwards}
-.k.mod .km{color:var(–key-text2);font-size:clamp(7px,.8vw,10px)}
-.k.fn .km{color:var(–accent2);font-size:clamp(6.5px,.75vw,9.5px)}
-.k.space-key .km{position:static;font-size:clamp(6.5px,.75vw,9.5px);color:var(–key-text2)}
-.k.sk-l{border-bottom-color:var(–accent);border-bottom-width:2px}
-.k.sk-r{border-bottom-color:var(–accent3);border-bottom-width:2px;color:var(–accent3)}
-.k.sk-v{background:var(–key-accent);border-bottom-color:var(–accent2);border-bottom-width:2px}
-.k.sk-v .km{color:var(–accent2);font-size:clamp(9px,1.1vw,14px);font-weight:600}
-.k.sk-star .km{color:var(–accent);font-size:clamp(9px,1.1vw,14px)}
-.k.sk-num{height:clamp(20px,2.5vw,28px)}
-.k.sk-num .km{font-size:clamp(6.5px,.7vw,8.5px);color:var(–text3);letter-spacing:.12em}
-.k.sk-gap{background:transparent;border-color:transparent;box-shadow:none;cursor:default;pointer-events:none}
-.k.sk-gap:hover{background:transparent;border-color:transparent}
-.steno-bot .k{height:clamp(30px,3.8vw,44px)}
-.numpad-wrap{display:flex;justify-content:center}
-.numpad-inner{display:flex;flex-direction:column;gap:5px;width:clamp(180px,28vw,260px)}
-
-/* ── STENO CHORD ── */
-.steno-chord-display{
-font-family:‘Syne’,sans-serif;font-size:clamp(.9rem,1.8vw,1.2rem);
-color:var(–accent2);letter-spacing:.18em;text-align:center;min-height:1.8rem;
-display:none;padding:.15rem 0
+/* Auto-scaling responsive grid */
+.grid.auto {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 }
 
-/* ── STATUS BAR ── */
-.status-bar{width:100%;max-width:1040px;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;font-size:.6rem;color:var(–text3);letter-spacing:.06em}
-.si{display:flex;align-items:center;gap:.3rem}
-.dot{width:6px;height:6px;border-radius:50%;background:var(–border2);transition:background .2s;flex-shrink:0}
-.dot.on{background:var(–accent3);box-shadow:0 0 5px var(–accent3)}
-.dot.warn{background:var(–danger)}
+/* ============================= */
+/* BUTTONS */
+/* ============================= */
 
-/* ── MODALS ── */
-.overlay{
-display:none;position:fixed;inset:0;
-background:rgba(0,0,0,.75);z-index:200;
-align-items:center;justify-content:center;padding:1.25rem;
-backdrop-filter:blur(4px)
+button {
+  background: var(--accent);
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-family: inherit;
+  font-weight: 600;
+  color: #000;
+  cursor: pointer;
+  transition: var(--transition);
+  touch-action: manipulation;
 }
-.overlay.open{display:flex}
-.score-modal{
-background:var(–panel);border:1px solid var(–border2);border-radius:16px;
-padding:1.75rem 2rem;max-width:420px;width:100%;
-box-shadow:0 30px 80px rgba(0,0,0,.6)
-}
-.score-modal h2{font-family:‘Syne’,sans-serif;font-weight:700;font-size:1.3rem;color:var(–accent);margin-bottom:1.25rem;letter-spacing:-.02em}
-.score-grid{display:grid;grid-template-columns:1fr 1fr;gap:.85rem 1.25rem;margin-bottom:1.25rem}
-.score-cell{display:flex;flex-direction:column;gap:.2rem}
-.score-cell .label{font-size:.6rem;color:var(–text3);letter-spacing:.1em;text-transform:uppercase}
-.score-cell .value{font-family:‘Syne’,sans-serif;font-size:1.6rem;font-weight:700;color:var(–text);line-height:1}
-.score-cell .value.hi{color:var(–accent)}
-.score-cell .value.green{color:var(–accent3)}
-.score-cell .value.warn{color:var(–danger)}
-.score-bar{height:4px;background:var(–border);border-radius:2px;margin:.3rem 0;overflow:hidden}
-.score-bar-fill{height:100%;background:linear-gradient(90deg,var(–accent),var(–accent2));border-radius:2px;transition:width .8s cubic-bezier(.4,0,.2,1)}
-.score-grade{text-align:center;font-family:‘Syne’,sans-serif;font-size:3.5rem;font-weight:800;line-height:1;margin:.4rem 0 .8rem}
-.score-msg{font-size:.75rem;color:var(–text2);line-height:1.6;margin-bottom:1.25rem}
-.score-actions{display:flex;gap:.6rem}
-.bt-modal{background:var(–panel);border:1px solid var(–border2);border-radius:14px;padding:1.6rem;max-width:400px;width:100%;box-shadow:0 30px 80px rgba(0,0,0,.6)}
-.bt-modal h2{font-family:‘Syne’,sans-serif;font-size:1.15rem;color:var(–accent);margin-bottom:.85rem}
-.bt-modal p{font-size:.74rem;color:var(–text2);line-height:1.7;margin-bottom:.5rem}
-.bt-modal code{background:var(–panel2);padding:.1rem .35rem;border-radius:4px;color:var(–accent2);font-size:.7rem}
-.modal-btns{display:flex;gap:.5rem;margin-top:1.1rem;flex-wrap:wrap}
 
-/* ═══ RESPONSIVE ═══ */
-@media(max-width:860px){
-.top-row{grid-template-columns:1fr}
-.stats-card{flex-direction:row;flex-wrap:wrap;align-items:center;gap:.5rem 1rem}
-.stat-divider{display:none}
+button:hover {
+  filter: brightness(1.05);
 }
-@media(max-width:640px){
-.app-header{
-padding-left:calc(.85rem + env(safe-area-inset-left));
-padding-right:calc(.85rem + env(safe-area-inset-right));
-height:calc(50px + env(safe-area-inset-top));
-padding-top:env(safe-area-inset-top);
+
+button:active {
+  transform: scale(0.97);
 }
-.logo{font-size:1.05rem}
-.theme-inline,.sound-row,.header-center{display:none}
-.menu-toggle{display:flex}
-.app-body{padding:.75rem .65rem 1.25rem;gap:.65rem}
-.keyboard{padding:8px 8px 11px;gap:4px}
-.kr{gap:3px}
-.k{height:clamp(30px,7vw,40px)}
-.stats-card{padding:.65rem .75rem;gap:.4rem .85rem}
-.stat-val{font-size:.9rem}
-.timer-display{font-size:1.2rem;min-width:52px}
+
+button.secondary {
+  background: var(--panel-2);
+  color: var(--text);
+  border: 1px solid var(--border);
 }
-@media(max-width:400px){
-.keyboard{padding:6px 6px 9px;gap:3px}
-.kr{gap:2.5px}
-.k{height:clamp(26px,8vw,34px)}
-.k.single .km{font-size:clamp(5.5px,2.5vw,8.5px)}
+
+button.danger {
+  background: var(--danger);
+  color: #fff;
 }
-@media(min-width:1200px){
-.app-body{padding:1.25rem 1.5rem 2rem;gap:1rem}
-.top-row,.kb-wrap,.status-bar{max-width:1100px}
-.top-row{grid-template-columns:1fr 220px}
-.k{height:clamp(42px,3.8vw,58px)}
-.k .km{font-size:clamp(10px,.9vw,13px)}
-.k .ks{font-size:clamp(8px,.68vw,10px)}
+
+/* ============================= */
+/* INPUTS */
+/* ============================= */
+
+input,
+textarea,
+select {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px; /* prevents iOS zoom */
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  color: var(--text);
+  font-family: inherit;
+  appearance: none;
+  -webkit-appearance: none;
+  transition: var(--transition);
 }
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* ============================= */
+/* RANGE SLIDER */
+/* ============================= */
+
+input[type="range"] {
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  width: 100%;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  margin-top: -6px;
+  cursor: pointer;
+}
+
+/* ============================= */
+/* DRAWER (BOTTOM SHEET) */
+/* ============================= */
+
+.drawer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  background: var(--panel);
+  border-top: 1px solid var(--border);
+  border-radius: 16px 16px 0 0;
+
+  padding: var(--spacing);
+  padding-bottom: calc(var(--spacing) + env(safe-area-inset-bottom));
+
+  transform: translateY(100%);
+  transition: transform 0.25s ease;
+
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.drawer.open {
+  transform: translateY(0);
+}
+
+/* ============================= */
+/* UTILITY CLASSES */
+/* ============================= */
+
+.muted {
+  color: var(--muted);
+}
+
+.accent {
+  color: var(--accent);
+}
+
+.center {
+  text-align: center;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ============================= */
+/* TABLET OPTIMIZATION */
+/* ============================= */
+
+@media (min-width: 768px) {
+  :root {
+    --spacing: 20px;
+  }
+
+  header {
+    height: calc(64px + env(safe-area-inset-top));
+  }
+
+  button {
+    padding: 12px 20px;
+  }
+}
+
+/* ============================= */
+/* DESKTOP OPTIMIZATION */
+/* ============================= */
+
+@media (min-width: 1024px) {
+  main {
+    padding-top: 32px;
+    padding-bottom: 32px;
+  }
+
+  .panel {
+    padding: 24px;
+  }
+}
+
+/* ============================= */
+/* ULTRA WIDE SAFETY */
+/* ============================= */
+
+@media (min-width: 1600px) {
+  main {
+    max-width: 1300px;
+  }
+}
+
+/* ============================= */
+/* LANDSCAPE MOBILE TUNING */
+/* ============================= */
+
+@media (orientation: landscape) and (max-height: 500px) {
+  header {
+    height: calc(48px + env(safe-area-inset-top));
+  }
+}
+
 </style>
-
 </head>
+
 <body data-theme="midnight">
 
 <header class="app-header">
@@ -475,10 +339,10 @@ padding-top:env(safe-area-inset-top);
     <div class="theme-inline">
       <span style="font-size:.6rem;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-right:2px">Theme</span>
       <div class="theme-swatch swatch-midnight active" data-t="midnight" title="Midnight"></div>
-      <div class="theme-swatch swatch-slate"    data-t="slate"    title="Slate"></div>
-      <div class="theme-swatch swatch-ember"    data-t="ember"    title="Ember"></div>
-      <div class="theme-swatch swatch-arctic"   data-t="arctic"   title="Arctic"></div>
-      <div class="theme-swatch swatch-noir"     data-t="noir"     title="Noir"></div>
+      <div class="theme-swatch swatch-slate" data-t="slate" title="Slate"></div>
+      <div class="theme-swatch swatch-ember" data-t="ember" title="Ember"></div>
+      <div class="theme-swatch swatch-arctic" data-t="arctic" title="Arctic"></div>
+      <div class="theme-swatch swatch-noir" data-t="noir" title="Noir"></div>
     </div>
     <div class="sound-row">
       <label>🎵</label>
@@ -505,47 +369,46 @@ padding-top:env(safe-area-inset-top);
 <div class="mobile-drawer" id="mobileDrawer">
   <div class="drawer-backdrop" id="drawerBackdrop"></div>
   <div class="drawer-panel">
+
     <div class="drawer-top">
       <div class="logo" style="font-size:1rem">Key<span>Flow</span></div>
       <button class="drawer-close-btn" id="drawerClose">✕</button>
     </div>
 
-```
-<div>
-  <div class="drawer-section-title">Theme</div>
-  <div class="theme-grid" id="drawerThemeGrid"></div>
-</div>
-
-<div>
-  <div class="drawer-section-title">Sound</div>
-  <div style="display:flex;flex-direction:column;gap:.65rem">
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem">
-      <span style="font-size:.68rem;color:var(--text2)">Volume</span>
-      <input type="range" id="volSliderMobile" min="0" max="1" step="0.05" value="0.4" style="flex:1;max-width:130px">
+    <div>
+      <div class="drawer-section-title">Theme</div>
+      <div class="theme-grid" id="drawerThemeGrid"></div>
     </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem">
-      <span style="font-size:.68rem;color:var(--text2)">Sound</span>
-      <select id="soundPresetMobile" class="chip">
-        <option value="bell">Bell</option>
-        <option value="soft">Soft Pad</option>
-        <option value="click">Crystal</option>
-        <option value="harp">Harp</option>
-        <option value="chime">Chime</option>
-      </select>
-    </div>
-  </div>
-</div>
 
-<div>
-  <div class="drawer-section-title">Actions</div>
-  <div style="display:flex;flex-direction:column;gap:.45rem">
-    <button class="chip" id="drawerShiftBtn" style="justify-content:flex-start">⇧ Toggle Shift</button>
-    <button class="chip" id="drawerCopyBtn" style="justify-content:flex-start">⧉ Copy Output</button>
-    <button class="chip" id="drawerBtBtn" style="justify-content:flex-start">⬡ Bluetooth</button>
-    <button class="chip danger" id="drawerClearBtn" style="justify-content:flex-start">✕ Clear Output</button>
-  </div>
-</div>
-```
+    <div>
+      <div class="drawer-section-title">Sound</div>
+      <div style="display:flex;flex-direction:column;gap:.65rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem">
+          <span style="font-size:.68rem;color:var(--text2)">Volume</span>
+          <input type="range" id="volSliderMobile" min="0" max="1" step="0.05" value="0.4" style="flex:1;max-width:130px">
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem">
+          <span style="font-size:.68rem;color:var(--text2)">Sound</span>
+          <select id="soundPresetMobile" class="chip">
+            <option value="bell">Bell</option>
+            <option value="soft">Soft Pad</option>
+            <option value="click">Crystal</option>
+            <option value="harp">Harp</option>
+            <option value="chime">Chime</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="drawer-section-title">Actions</div>
+      <div style="display:flex;flex-direction:column;gap:.45rem">
+        <button class="chip" id="drawerShiftBtn" style="justify-content:flex-start">⇧ Toggle Shift</button>
+        <button class="chip" id="drawerCopyBtn" style="justify-content:flex-start">⧉ Copy Output</button>
+        <button class="chip" id="drawerBtBtn" style="justify-content:flex-start">⬡ Bluetooth</button>
+        <button class="chip danger" id="drawerClearBtn" style="justify-content:flex-start">✕ Clear Output</button>
+      </div>
+    </div>
 
   </div>
 </div>
@@ -565,33 +428,32 @@ padding-top:env(safe-area-inset-top);
         <span>Output</span>
         <div class="output-bar-right">
           <span id="charCount" style="color:var(--text3)">0 chars</span>
-          <span id="wpmLive" style="color:var(--accent3);font-size:.62rem;letter-spacing:.06em">— WPM</span>
+          <span id="wpmLive" style="color:var(--accent3);font-size:.62rem;letter-spacing:.06em">- WPM</span>
           <button class="chip" id="copyBtn" style="padding:.2rem .5rem">Copy</button>
         </div>
       </div>
-      <textarea id="output" placeholder="Start typing — session timer begins on first keystroke…" spellcheck="false"></textarea>
+      <textarea id="output" placeholder="Start typing - session timer begins on first keystroke..." spellcheck="false"></textarea>
     </div>
-
-```
+    
 <div class="stats-card">
-  <div class="timer-display" id="timerDisplay">0:00</div>
-  <div class="timer-controls">
-    <button class="chip" id="timerStartBtn">▶ Start</button>
-    <button class="chip" id="timerResetBtn">↺</button>
-  </div>
-  <div class="dur-chips">
-    <button class="chip active" data-dur="60">1 min</button>
-    <button class="chip" data-dur="120">2 min</button>
-    <button class="chip" data-dur="300">5 min</button>
-  </div>
-  <div class="stat-divider"></div>
-  <div class="stat-row"><span class="stat-label">WPM</span><span class="stat-val accent" id="statWpm">—</span></div>
-  <div class="stat-row"><span class="stat-label">Chars</span><span class="stat-val" id="statChars">0</span></div>
-  <div class="stat-row"><span class="stat-label">Words</span><span class="stat-val" id="statWords">0</span></div>
-  <div class="stat-row"><span class="stat-label">Keys</span><span class="stat-val green" id="statKeys">0</span></div>
-</div>
-```
+      <div class="timer-display" id="timerDisplay">0:00</div>
+      <div class="timer-controls">
+        <button class="chip" id="timerStartBtn">▶ Start</button>
+        <button class="chip" id="timerResetBtn">↺</button>
+      </div>
+      <div class="dur-chips">
+        <button class="chip active" data-dur="60">1 min</button>
+        <button class="chip" data-dur="120">2 min</button>
+        <button class="chip" data-dur="300">5 min</button>
+      </div>
 
+      <div class="stat-divider"></div>
+
+      <div class="stat-row"><span class="stat-label">WPM</span><span class="stat-val accent" id="statWpm">-</span></div>
+      <div class="stat-row"><span class="stat-label">Chars</span><span class="stat-val" id="statChars">0</span></div>
+      <div class="stat-row"><span class="stat-label">Words</span><span class="stat-val" id="statWords">0</span></div>
+      <div class="stat-row"><span class="stat-label">Keys</span><span class="stat-val green" id="statKeys">0</span></div>
+    </div>
   </div>
 
   <div class="steno-chord-display" id="stenoChord"></div>
